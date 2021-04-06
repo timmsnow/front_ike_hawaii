@@ -12,6 +12,10 @@
       |
       <router-link to="/logout">Logout</router-link>
       </span>
+      <span>
+      |
+      <router-link to="/calendar">Trip Calendar</router-link>
+      </span>
     </div>
     <router-view />
   </div>
