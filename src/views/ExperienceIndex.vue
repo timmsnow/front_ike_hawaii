@@ -1,21 +1,40 @@
 <template>
   <div class="experience-index">
-  <ul>
+    <ul>
       <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
     </ul>
-
+<h2>Select a Location to Search</h2>
+<p>Hilo Area | Puna | Waimea/North Coast | Kailua-Kona | South-West </p>
     <div class="container">
       <div class="row">
         <div class="card" style="width: 18rem" id="index" v-for="experience in experiences" v-bind:key="experience.id">
           <img v-bind:src="experience.image_url" v-bind:alt="experience.name" class="card-img-top" />
           <div class="card-body">
-            <router-link v-bind:to="`/experiences/${experience.id}`">
-              <h4>{{ experience.name }}</h4>
-            </router-link>
+            <h4>{{ experience.name }}</h4>
             <p class="card-text">
               {{ experience.location }}
             </p>
+            <button v-on:click="showExperience(experience)">More Info</button>
           </div>
+          <dialog id="experience-show">
+            <form method="dialog">
+              <h1>Name: {{ currentExperience.name }}</h1>
+              <p>
+                Location on the Island:
+                {{ currentExperience.location }}
+              </p>
+              <p>
+                Recommended Length of Stay:
+                {{ currentExperience.time }}
+              </p>
+              <p>
+                Important Information:
+                {{ currentExperience.info }}
+              </p>
+              <img v-bind:src="experience.image_url" v-bind:alt="experience.name" />
+              <button>Close</button>
+            </form>
+          </dialog>
         </div>
         <div class="col-sm"></div>
         <div class="col-sm"></div>
@@ -33,6 +52,7 @@ export default {
     return {
       experiences: [],
       errors: [],
+      currentExperience: {},
     };
   },
   created: function () {
@@ -45,10 +65,18 @@ export default {
         this.experiences = response.data;
       });
     },
+    showExperience: function (experience) {
+      console.log(experience);
+      this.currentExperience = experience;
+      document.querySelector("#experience-show").showModal();
+    },
+    indexByLocation: function (experiences, location) {
+      const item = experiences.find(location);
+      return experiences.indexOf(item);
+    },
   },
 };
 </script>
-
 
 <style>
 .row {
@@ -68,5 +96,3 @@ img {
   text-align: center;
 }
 </style>
-
-

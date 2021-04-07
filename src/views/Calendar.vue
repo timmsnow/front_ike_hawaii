@@ -1,5 +1,6 @@
 <template>
   <div class="calendar">
+    <!-- <div v-if="calendarAppear()"> -->
     <form v-on:submit.prevent="updateUser(user)">
       <h1>When will you be coming to our island?</h1>
       <ul>
@@ -9,28 +10,31 @@
       </ul>
       <div class="form-group">
         <label>Start Date:</label>
-        <input type="text" class="form-control" v-model="user.tripStart" />
+        <input type="text" class="form-control" v-model="user.trip_start" />
       </div>
       <div class="form-group">
         <label>End Date:</label>
-        <input type="text" class="form-control" v-model="user.tripEnd" />
+        <input type="text" class="form-control" v-model="user.trip_end" />
       </div>
       <input type="submit" class="btn btn-primary" value="Submit" />
     </form>
+    <!-- </div> -->
 
-    <h1>Your Trip Calendar</h1>
-    <div class="slider">
-      <div class="full hide-scroll">
-        <ul class="hs">
-          <router-link to="/experiences">
-            <li class="item"><h2>June 4</h2></li>
-          </router-link>
-          <li class="item">June 5</li>
-          <li class="item">June 6</li>
-          <li class="item">June 7</li>
-          <li class="item">June 8</li>
-          <li class="item">June 9</li>
-        </ul>
+    <div v-if="!calendarAppear()">
+      <h1>Your Trip Calendar</h1>
+      <div class="slider">
+        <div class="full hide-scroll">
+          <ul class="hs">
+            <router-link to="/experiences">
+              <li class="item"><h2>June 4</h2></li>
+            </router-link>
+            <li class="item">June 5</li>
+            <li class="item">June 6</li>
+            <li class="item">June 7</li>
+            <li class="item">June 8</li>
+            <li class="item">June 9</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -105,7 +109,6 @@
 router-link {
   text-decoration: none;
 }
-
 </style>
 
 <script>
@@ -116,27 +119,35 @@ export default {
     return {
       user: {},
       errors: [],
+      user_id: localStorage.getItem("user_id"),
     };
   },
   created: function () {
-    axios.get("/api/users/" + this.$route.params.id).then((response) => {
+    axios.get(`/api/users/${this.user_id}`).then((response) => {
       console.log(response.data);
       this.user = response.data;
+      console.log(this.user);
     });
   },
   methods: {
-    updateUser: function (user) {
+    updateUser: function () {
       console.log("updating user trip info");
       var params = {
-        tripStart: user.trip_start,
-        tripEnd: user.trip_end,
+        trip_start: this.user.trip_start,
+        trip_end: this.user.trip_end,
       };
+      console.log(this.user);
       axios
-        .patch("/api/users/" + this.$route.params.id, params)
+        .patch("/api/users/" + this.user_id, params)
         // .then(() => {
         //   this.$router.push("/posts/" + this.post.id);
         // })
         .catch((error) => console.log(error.response));
+    },
+    calendarAppear: function () {
+      if (this.user.trip_start === "" && this.user.trip_start === "") {
+        return true;
+      }
     },
   },
 };
