@@ -3,11 +3,23 @@
     <ul>
       <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
     </ul>
-<h2>Select a Location to Search</h2>
-<p>Hilo Area | Puna | Waimea/North Coast | Kailua-Kona | South-West </p>
+    <h2>Select a Location to Search</h2>
+    <select v-model="location">
+      <option valeu="Hilo Area">Hilo Area</option>
+      <option valeu="Puna">Puna</option>
+      <option valeu="Waimea/North Coast">Waimea/North Coast</option>
+      <option valeu="Kailua-Kona">Kailua-Kona</option>
+      <option valeu="Captain Cook + South">Captain Cook + South</option>
+    </select>
     <div class="container">
       <div class="row">
-        <div class="card" style="width: 18rem" id="index" v-for="experience in experiences" v-bind:key="experience.id">
+        <div
+          class="card"
+          style="width: 18rem"
+          id="index"
+          v-for="experience in filterByLocation"
+          v-bind:key="experience.id"
+        >
           <img v-bind:src="experience.image_url" v-bind:alt="experience.name" class="card-img-top" />
           <div class="card-body">
             <h4>{{ experience.name }}</h4>
@@ -53,10 +65,16 @@ export default {
       experiences: [],
       errors: [],
       currentExperience: {},
+      location: "",
     };
   },
   created: function () {
     this.indexExperiences();
+  },
+  computed: {
+    filterByLocation: function () {
+      return this.experiences.filter((experience) => !experience.location.indexOf(this.location));
+    },
   },
   methods: {
     indexExperiences: function () {
@@ -69,10 +87,6 @@ export default {
       console.log(experience);
       this.currentExperience = experience;
       document.querySelector("#experience-show").showModal();
-    },
-    indexByLocation: function (experiences, location) {
-      const item = experiences.find(location);
-      return experiences.indexOf(item);
     },
   },
 };
