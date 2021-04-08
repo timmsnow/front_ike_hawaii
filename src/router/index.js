@@ -5,6 +5,7 @@ import Login from "../views/Login.vue";
 import Logout from "../views/Logout.vue";
 import Calendar from "../views/Calendar.vue";
 import ExperienceIndex from "../views/ExperienceIndex.vue";
+import ListIndex from "../views/ListIndex.vue";
 
 Vue.use(VueRouter);
 
@@ -41,6 +42,11 @@ const routes = [
     path: "/experiences",
     name: "experience-index",
     component: ExperienceIndex,
+  },
+  {
+    path: "/lists",
+    name: "list-index",
+    component: ListIndex,
   },
 ];
 
