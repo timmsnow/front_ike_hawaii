@@ -99,7 +99,7 @@ export default {
       axios
         .post("api/list_items", params)
         .then(() => {
-          this.$router.push("/lists/");
+          this.$router.push("/calendar/");
         })
         .catch((error) => console.log(error.response));
     },

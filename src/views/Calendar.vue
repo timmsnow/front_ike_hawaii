@@ -1,33 +1,54 @@
 <template>
-  <div class="calendar">
-    <!-- <div v-if="calendarAppear()"> -->
-    <form v-on:submit.prevent="updateUser(user)">
-      <h1>When will you be coming to our island?</h1>
-      <ul>
-        <li class="text-danger" v-for="error in errors" v-bind:key="error">
-          {{ error }}
-        </li>
-      </ul>
-      <div class="form-group">
-        <label>Start Date:</label>
-        <input type="text" class="form-control" v-model="user.trip_start" />
-      </div>
-      <div class="form-group">
-        <label>End Date:</label>
-        <input type="text" class="form-control" v-model="user.trip_end" />
-      </div>
-      <input type="submit" class="btn btn-primary" value="Submit" />
-    </form>
-    <!-- </div> -->
+  <div class="calendar-page">
+    <div v-on:submit.prevent="calendarAppear()" class="inputs">
+      <form v-on:submit.prevent="updateUser(user)">
+        <h1>When will you be coming to our island?</h1>
+        <ul>
+          <li class="text-danger" v-for="error in errors" v-bind:key="error">
+            {{ error }}
+          </li>
+        </ul>
+        <div class="form-group">
+          <label>Start Date:</label>
+          <input type="text" class="form-control" v-model="user.trip_start" />
+        </div>
+        <div class="form-group">
+          <label>End Date:</label>
+          <input type="text" class="form-control" v-model="user.trip_end" />
+        </div>
+        <input type="submit" class="btn btn-primary" value="Submit" />
+      </form>
+    </div>
 
-    <div v-if="!calendarAppear()">
+    <button v-on:click="inputsAppear()" class="hidden-button" style="display: none">Edit Trip Dates</button>
+    <div class="calendar" style="display: none">
       <h1>Your Trip Calendar</h1>
       <div class="slider">
         <div class="full hide-scroll">
           <ul class="hs">
-            <router-link to="/experiences">
-              <li class="item"><h2>June 4</h2></li>
-            </router-link>
+            <li class="item">
+              <h2>June 4</h2>
+              <br />
+              <div class="container" v-for="list_item in filterByUser" v-bind:key="list_item.id">
+                <div class="row">
+                  <div class="col-4">Experience:</div>
+                  <div class="col-8">{{ list_item.experience_info.name }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-4">Recommended Length of Stay:</div>
+                  <div class="col-8">{{ list_item.experience_info.length }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-4">Best Time of Day:</div>
+                  <div class="col-8">{{ list_item.experience_info.time }}</div>
+                </div>
+                <button v-on:click="destroyListItem(list_item)">Remove Experience</button>
+                <hr />
+              </div>
+              <router-link to="/experiences">
+                <button>Add another Experience</button>
+              </router-link>
+            </li>
             <li class="item">June 5</li>
             <li class="item">June 6</li>
             <li class="item">June 7</li>
@@ -51,6 +72,7 @@
   grid-gap: var(--gutter) 0;
   grid-template-columns: var(--gutter) 1fr var(--gutter);
   align-content: start;
+  width: auto;
 }
 
 .slider > * {
@@ -64,9 +86,9 @@
 .hs {
   display: grid;
   grid-gap: calc(var(--gutter) / 2);
-  grid-template-columns: 10px repeat(6, calc(50% - var(--gutter) * 2)) 10px;
+  /* grid-template-columns: 10px repeat(6, calc(50% - var(--gutter) * 2)) 10px; */
+  grid-template-columns: 10px repeat(6, auto) 10px;
   grid-template-rows: minmax(300px, 1fr);
-
   overflow-x: scroll;
   scroll-snap-type: x proximity;
   padding-bottom: calc(0.75 * var(--gutter));
@@ -103,7 +125,9 @@
   align-items: center;
   background: #fff;
   border-radius: 8px;
-  height: 270px;
+  height: auto;
+  width: auto;
+  font-size: 12px;
 }
 
 router-link {
@@ -120,6 +144,8 @@ export default {
       user: {},
       errors: [],
       user_id: localStorage.getItem("user_id"),
+      list_items: [],
+      experiences: [],
     };
   },
   created: function () {
@@ -128,6 +154,14 @@ export default {
       this.user = response.data;
       console.log(this.user);
     });
+    this.indexListItems();
+    this.indexExperiences();
+  },
+  computed: {
+    filterByUser: function () {
+      var current_user = localStorage.getItem("user_id");
+      return this.list_items.filter((list_item) => list_item.user_id == current_user);
+    },
   },
   methods: {
     updateUser: function () {
@@ -137,17 +171,49 @@ export default {
         trip_end: this.user.trip_end,
       };
       console.log(this.user);
-      axios
-        .patch("/api/users/" + this.user_id, params)
-        // .then(() => {
-        //   this.$router.push("/posts/" + this.post.id);
-        // })
-        .catch((error) => console.log(error.response));
+      axios.patch("/api/users/" + this.user_id, params).catch((error) => console.log(error.response));
     },
     calendarAppear: function () {
-      if (this.user.trip_start === "" && this.user.trip_start === "") {
-        return true;
+      var x = document.querySelector(".inputs");
+      var y = document.querySelector(".calendar");
+      var z = document.querySelector(".hidden-button");
+      if (x.style.display === "none") {
+        x.style.display === "block";
+      } else {
+        x.style.display = "none";
+        y.style.display = "block";
+        z.style.display = "block";
       }
+    },
+    inputsAppear: function () {
+      var x = document.querySelector(".inputs");
+      var y = document.querySelector(".calendar");
+      var z = document.querySelector(".hidden-button");
+      if (x.style.display === "block") {
+        x.style.display === "none";
+      } else {
+        x.style.display = "block";
+        y.style.display = "none";
+        z.style.display = "none";
+      }
+    },
+    indexExperiences: function () {
+      axios.get("api/experiences").then((response) => {
+        console.log(response.data);
+        this.experiences = response.data;
+      });
+    },
+    indexListItems: function () {
+      axios.get("api/list_items").then((response) => {
+        console.log(response.data);
+        this.list_items = response.data;
+      });
+    },
+    destroyListItem: function (list_item) {
+      axios.delete("/api/list_items/" + list_item.id).then(() => {
+        console.log("destroyed!");
+        this.$router.go();
+      });
     },
   },
 };
