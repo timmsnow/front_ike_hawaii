@@ -20,6 +20,7 @@
                 <div class="col-4">Best Time of Day:</div>
                 <div class="col-8">{{ list_item.experience_info.time }}</div>
               </div>
+              <button v-on:click="destroyListItem(list_item)">Remove Experience</button>
               <hr />
             </div>
             <router-link to="/experiences">
@@ -34,6 +35,7 @@
         </ul>
       </div>
     </div>
+    <button v-on:click="inputsAppear()" class="update-button">Edit Trip Dates</button>
   </div>
 </template>
 
@@ -72,6 +74,9 @@ export default {
         this.experiences = response.data;
       });
     },
+    inputsAppear: function () {
+      this.$router.push("/calendar/");
+    },
   },
 };
 </script>
@@ -83,5 +88,9 @@ export default {
 
 .item {
   min-width: 400px;
+}
+
+.update-button {
+  margin-top: 2%;
 }
 </style>

@@ -1,6 +1,25 @@
 <template>
   <div class="calendar-page">
-    <div v-on:submit.prevent="calendarAppear()" class="inputs">
+    <!-- <div v-on:submit.prevent="calendarAppear()" class="inputs"> -->
+    <form v-on:submit.prevent="updateUser(user)" v-if="noDates()">
+      <h1>When will you be coming to our island?</h1>
+      <ul>
+        <li class="text-danger" v-for="error in errors" v-bind:key="error">
+          {{ error }}
+        </li>
+      </ul>
+      <div class="form-group">
+        <label>Start Date:</label>
+        <input type="text" class="form-control" v-model="input_trip_start" />
+      </div>
+      <div class="form-group">
+        <label>End Date:</label>
+        <input type="text" class="form-control" v-model="input_trip_end" />
+      </div>
+      <input type="submit" class="btn btn-primary" value="Submit" />
+    </form>
+
+    <dialog id="edit-dates">
       <form v-on:submit.prevent="updateUser(user)">
         <h1>When will you be coming to our island?</h1>
         <ul>
@@ -10,18 +29,18 @@
         </ul>
         <div class="form-group">
           <label>Start Date:</label>
-          <input type="text" class="form-control" v-model="user.trip_start" />
+          <input type="text" class="form-control" v-model="input_trip_start" />
         </div>
         <div class="form-group">
           <label>End Date:</label>
-          <input type="text" class="form-control" v-model="user.trip_end" />
+          <input type="text" class="form-control" v-model="input_trip_end" />
         </div>
         <input type="submit" class="btn btn-primary" value="Submit" />
       </form>
-    </div>
+    </dialog>
+    <!-- </div> -->
 
-    <button v-on:click="inputsAppear()" class="hidden-button" style="display: none">Edit Trip Dates</button>
-    <div class="calendar" style="display: none">
+    <div class="calendar" v-if="!noDates()">
       <h1>Your Trip Calendar</h1>
       <div class="slider">
         <div class="full hide-scroll">
@@ -58,6 +77,7 @@
         </div>
       </div>
     </div>
+    <button v-if="!noDates()" v-on:click="editDates()" class="hidden-button">Edit Trip Dates</button>
   </div>
 </template>
 
@@ -133,6 +153,12 @@
 router-link {
   text-decoration: none;
 }
+
+.hidden-button {
+  margin-top: 2%;
+  margin-left: auto;
+  margin-right: auto;
+}
 </style>
 
 <script>
@@ -146,6 +172,8 @@ export default {
       user_id: localStorage.getItem("user_id"),
       list_items: [],
       experiences: [],
+      input_trip_start: "",
+      input_trip_end: "",
     };
   },
   created: function () {
@@ -167,45 +195,40 @@ export default {
     updateUser: function () {
       console.log("updating user trip info");
       var params = {
-        trip_start: this.user.trip_start,
-        trip_end: this.user.trip_end,
+        trip_start: this.input_trip_start,
+        trip_end: this.input_trip_end,
       };
       console.log(this.user);
       axios.patch("/api/users/" + this.user_id, params).catch((error) => console.log(error.response));
+      this.$router.go();
     },
-    calendarAppear: function () {
-      var x = document.querySelector(".inputs");
-      var y = document.querySelector(".calendar");
-      var z = document.querySelector(".hidden-button");
-      if (x.style.display === "none") {
-        x.style.display === "block";
-      } else {
-        x.style.display = "none";
-        y.style.display = "block";
-        z.style.display = "block";
+    noDates: function () {
+      if (this.user.trip_start === null || this.user.trip_start === null) {
+        return true;
       }
     },
-    inputsAppear: function () {
-      var x = document.querySelector(".inputs");
-      var y = document.querySelector(".calendar");
-      var z = document.querySelector(".hidden-button");
-      if (x.style.display === "block") {
-        x.style.display === "none";
-      } else {
-        x.style.display = "block";
-        y.style.display = "none";
-        z.style.display = "none";
-      }
+    editDates: function () {
+      document.querySelector("#edit-dates").showModal();
     },
+    // calendarAppear: function () {
+    //   var x = document.querySelector(".inputs");
+    //   var y = document.querySelector(".calendar");
+    //   var z = document.querySelector(".hidden-button");
+    //   if (x.style.display === "none") {
+    //     x.style.display === "block";
+    //   } else {
+    //     x.style.display = "none";
+    //     y.style.display = "block";
+    //     z.style.display = "block";
+    //   }
+    // },
     indexExperiences: function () {
       axios.get("api/experiences").then((response) => {
-        console.log(response.data);
         this.experiences = response.data;
       });
     },
     indexListItems: function () {
       axios.get("api/list_items").then((response) => {
-        console.log(response.data);
         this.list_items = response.data;
       });
     },
