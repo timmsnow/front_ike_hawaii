@@ -45,34 +45,21 @@
       <div class="slider">
         <div class="full hide-scroll">
           <ul class="hs">
-            <li class="item">
-              <h2>June 4</h2>
-              <br />
-              <div class="container" v-for="list_item in filterByUser" v-bind:key="list_item.id">
-                <div class="row">
-                  <div class="col-4">Experience:</div>
-                  <div class="col-8">{{ list_item.experience_info.name }}</div>
+            <div class="container" v-for="date in dates" v-bind:key="date">
+              <li class="item">
+                <h1 class="date">{{ date }}</h1>
+                <div class="item-container" v-for="list_item in filterByUser" v-bind:key="list_item.id">
+                  <p>Experience: {{ list_item.experience_info.name }}</p>
+                  <p>Recommended Length of Stay: {{ list_item.experience_info.length }}</p>
+                  <p>Best Time of Day: {{ list_item.experience_info.time }}</p>
+                  <button v-on:click="destroyListItem(list_item)">Remove Experience</button>
+                  <hr />
                 </div>
-                <div class="row">
-                  <div class="col-4">Recommended Length of Stay:</div>
-                  <div class="col-8">{{ list_item.experience_info.length }}</div>
-                </div>
-                <div class="row">
-                  <div class="col-4">Best Time of Day:</div>
-                  <div class="col-8">{{ list_item.experience_info.time }}</div>
-                </div>
-                <button v-on:click="destroyListItem(list_item)">Remove Experience</button>
-                <hr />
-              </div>
-              <router-link to="/experiences">
-                <button>Add another Experience</button>
-              </router-link>
-            </li>
-            <li class="item">June 5</li>
-            <li class="item">June 6</li>
-            <li class="item">June 7</li>
-            <li class="item">June 8</li>
-            <li class="item">June 9</li>
+                <router-link to="/experiences">
+                  <button class="button" v-on:click="createListItem()">Add another Experience</button>
+                </router-link>
+              </li>
+            </div>
           </ul>
         </div>
       </div>
@@ -163,8 +150,12 @@ router-link {
 
 <script>
 import axios from "axios";
+// import CalendarContainer from "../components/CalendarContainer";
 
 export default {
+  // components: {
+  //   CalendarContainer,
+  // },
   data: function () {
     return {
       user: {},
@@ -174,16 +165,27 @@ export default {
       experiences: [],
       input_trip_start: "",
       input_trip_end: "",
+      dates: [],
     };
   },
   created: function () {
     axios.get(`/api/users/${this.user_id}`).then((response) => {
-      console.log(response.data);
       this.user = response.data;
-      console.log(this.user);
     });
     this.indexListItems();
-    this.indexExperiences();
+    // this.indexExperiences();
+  },
+  mounted: function () {
+    axios.get(`/api/users/${this.user_id}`).then((response) => {
+      this.user = response.data;
+      let initialDate = new Date(this.user.trip_start),
+        endDate = new Date(this.user.trip_end);
+      for (let q = initialDate; q <= endDate; q.setDate(q.getDate() + 1)) {
+        this.dates.push(q.toDateString());
+      }
+      console.log(this.dates);
+      // this.createDates();
+    });
   },
   computed: {
     filterByUser: function () {
@@ -210,6 +212,19 @@ export default {
     editDates: function () {
       document.querySelector("#edit-dates").showModal();
     },
+    // createDates: function () {
+    //   var ul = document.querySelector(".hs");
+    //   for (var i = 0; i < this.dates.length; i++) {
+    //     var date = this.dates[i];
+    //     var listItem = document.createElement("li");
+    //     // var container_text = document.createTextNode("experience:");
+    //     listItem.textContent = date;
+    //     ul.appendChild(listItem);
+    //   }
+    // },
+    // addListItemsToDate: function () {
+    //   add experiences to date object inside date array
+    // },
     // calendarAppear: function () {
     //   var x = document.querySelector(".inputs");
     //   var y = document.querySelector(".calendar");
@@ -222,15 +237,25 @@ export default {
     //     z.style.display = "block";
     //   }
     // },
-    indexExperiences: function () {
-      axios.get("api/experiences").then((response) => {
-        this.experiences = response.data;
-      });
-    },
+    // indexExperiences: function () {
+    //   axios.get("api/experiences").then((response) => {
+    //     this.experiences = response.data;
+    //   });
+    // },
     indexListItems: function () {
       axios.get("api/list_items").then((response) => {
         this.list_items = response.data;
       });
+    },
+    createListItem: function () {
+      console.log("adding a list item");
+      var params = {
+        user_id: localStorage.getItem("user_id"),
+        // experience_id: localStorage.getItem("experience_id"),
+        date: document.querySelector(".date").innerHTML,
+      };
+      console.log(document.querySelector(".date").innerHTML);
+      axios.post("api/list_items", params).catch((error) => console.log(error.response));
     },
     destroyListItem: function (list_item) {
       axios.delete("/api/list_items/" + list_item.id).then(() => {

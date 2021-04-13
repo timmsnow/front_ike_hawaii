@@ -45,7 +45,7 @@
               </p>
               <img v-bind:src="experience.image_url" v-bind:alt="experience.name" />
               <button>Close</button>
-              <button v-on:click="createListItem()">Add to the list</button>
+              <button v-on:click="updateListItem()">Add to the list</button>
             </form>
           </dialog>
         </div>
@@ -90,16 +90,16 @@ export default {
       document.querySelector("#experience-show").showModal();
       localStorage.setItem("experience_id", experience.id) === true;
     },
-    createListItem: function () {
-      console.log("adding a list item");
+    updateListItem: function () {
+      console.log("adding experience to list item");
       var params = {
-        user_id: localStorage.getItem("user_id"),
+        // user_id: localStorage.getItem("user_id"),
         experience_id: localStorage.getItem("experience_id"),
       };
       axios
-        .post("api/list_items", params)
+        .patch("api/list_items" + this.list_item.id, params)
         .then(() => {
-          this.$router.push("/lists/");
+          this.$router.push("/calendar");
         })
         .catch((error) => console.log(error.response));
     },

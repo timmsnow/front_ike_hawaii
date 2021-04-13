@@ -14,7 +14,7 @@
       </span>
       <span v-if="ifLoggedIn()">
         |
-        <router-link to="/lists">Trip Calendar</router-link>
+        <router-link to="/calendar">Trip Calendar</router-link>
       </span>
     </div>
     <router-view />
