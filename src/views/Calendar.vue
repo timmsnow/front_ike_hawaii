@@ -45,18 +45,38 @@
       <div class="slider">
         <div class="full hide-scroll">
           <ul class="hs">
-            <div class="container" v-for="date in dates" v-bind:key="date">
+            <div class="container" v-for="(date, index) in dates" v-bind:key="`vfor-${index}`">
               <li class="item">
-                <h1 class="date">{{ date }}</h1>
-                <div class="item-container" v-for="list_item in filterByUser" v-bind:key="list_item.id">
-                  <p>Experience: {{ list_item.experience_info.name }}</p>
-                  <p>Recommended Length of Stay: {{ list_item.experience_info.length }}</p>
-                  <p>Best Time of Day: {{ list_item.experience_info.time }}</p>
-                  <button v-on:click="destroyListItem(list_item)">Remove Experience</button>
-                  <hr />
+                <h1 class="date" ref="date">
+                  {{ date }}
+                </h1>
+                <div class="item-container" v-for="list_item in filterByUserAndDate" v-bind:key="list_item.id">
+                  <div class="filter" v-if="list_item.date == date">
+                    <p>Experience: {{ list_item.experience_info.name }}</p>
+                    <!-- <p>Recommended Length of Stay: {{ list_item.experience_info.length }}</p>
+                    <p>Best Time of Day: {{ list_item.experience_info.time }}</p> -->
+                    <button v-on:click="destroyListItem(list_item)">Remove Experience</button>
+                    <button v-on:click="showListItem(list_item)">Show More Info</button>
+                    <dialog id="item-show">
+                      <form method="dialog">
+                        <h1>Name: {{ list_item.experience_info.name }}</h1>
+                        <p>Location: {{ list_item.experience_info.location }}</p>
+                        <p>Stay For: {{ list_item.experience_info.length }}</p>
+                        <p>Best Time to Visit: {{ list_item.experience_info.time }}</p>
+                        <p>Important Information: {{ list_item.experience_info.info }}</p>
+                        <img
+                          v-bind:src="list_item.experience_info.image_url"
+                          v-bind:alt="list_item.experience_info.name"
+                        />
+
+                        <button>Close</button>
+                      </form>
+                    </dialog>
+                    <hr />
+                  </div>
                 </div>
                 <router-link to="/experiences">
-                  <button class="button" v-on:click="createListItem()">Add another Experience</button>
+                  <button class="button" ref="button" v-on:click="storeDate(date)">Add another Experience</button>
                 </router-link>
               </li>
             </div>
@@ -150,12 +170,8 @@ router-link {
 
 <script>
 import axios from "axios";
-// import CalendarContainer from "../components/CalendarContainer";
 
 export default {
-  // components: {
-  //   CalendarContainer,
-  // },
   data: function () {
     return {
       user: {},
@@ -166,6 +182,7 @@ export default {
       input_trip_start: "",
       input_trip_end: "",
       dates: [],
+      list_item: {},
     };
   },
   created: function () {
@@ -188,8 +205,9 @@ export default {
     });
   },
   computed: {
-    filterByUser: function () {
+    filterByUserAndDate: function () {
       var current_user = localStorage.getItem("user_id");
+      //add logic to filter by date?
       return this.list_items.filter((list_item) => list_item.user_id == current_user);
     },
   },
@@ -212,50 +230,18 @@ export default {
     editDates: function () {
       document.querySelector("#edit-dates").showModal();
     },
-    // createDates: function () {
-    //   var ul = document.querySelector(".hs");
-    //   for (var i = 0; i < this.dates.length; i++) {
-    //     var date = this.dates[i];
-    //     var listItem = document.createElement("li");
-    //     // var container_text = document.createTextNode("experience:");
-    //     listItem.textContent = date;
-    //     ul.appendChild(listItem);
-    //   }
-    // },
-    // addListItemsToDate: function () {
-    //   add experiences to date object inside date array
-    // },
-    // calendarAppear: function () {
-    //   var x = document.querySelector(".inputs");
-    //   var y = document.querySelector(".calendar");
-    //   var z = document.querySelector(".hidden-button");
-    //   if (x.style.display === "none") {
-    //     x.style.display === "block";
-    //   } else {
-    //     x.style.display = "none";
-    //     y.style.display = "block";
-    //     z.style.display = "block";
-    //   }
-    // },
-    // indexExperiences: function () {
-    //   axios.get("api/experiences").then((response) => {
-    //     this.experiences = response.data;
-    //   });
-    // },
     indexListItems: function () {
       axios.get("api/list_items").then((response) => {
         this.list_items = response.data;
       });
     },
-    createListItem: function () {
-      console.log("adding a list item");
-      var params = {
-        user_id: localStorage.getItem("user_id"),
-        // experience_id: localStorage.getItem("experience_id"),
-        date: document.querySelector(".date").innerHTML,
-      };
-      console.log(document.querySelector(".date").innerHTML);
-      axios.post("api/list_items", params).catch((error) => console.log(error.response));
+    storeDate: function (date) {
+      localStorage.setItem("date", date) === true;
+    },
+    showListItem: function (list_item) {
+      console.log(list_item);
+      this.list_item = list_item;
+      document.querySelector("#item-show").showModal();
     },
     destroyListItem: function (list_item) {
       axios.delete("/api/list_items/" + list_item.id).then(() => {

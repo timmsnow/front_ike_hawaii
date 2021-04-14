@@ -4,6 +4,8 @@
       <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
     </ul>
     <h2>Select a Location to Search</h2>
+
+    <p>Experience in</p>
     <select v-model="location">
       <option valeu="Hilo Area">Hilo Area</option>
       <option valeu="Puna">Puna</option>
@@ -11,13 +13,20 @@
       <option valeu="Kailua-Kona">Kailua-Kona</option>
       <option valeu="Captain Cook + South">Captain Cook + South</option>
     </select>
+
+    <select v-model="tag">
+      <option valeu="Beaches">Beaches</option>
+      <option valeu="Ocean Activities">Ocean Activities</option>
+      <option valeu="Volcano">Volcano</option>
+      <option valeu="Hiking">Hiking</option>
+    </select>
     <div class="container">
       <div class="row">
         <div
           class="card"
           style="width: 18rem"
           id="index"
-          v-for="experience in filterByLocation"
+          v-for="experience in filterExperiences"
           v-bind:key="experience.id"
         >
           <img v-bind:src="experience.image_url" v-bind:alt="experience.name" class="card-img-top" />
@@ -37,15 +46,15 @@
               </p>
               <p>
                 Recommended Length of Stay:
-                {{ currentExperience.time }}
+                {{ currentExperience.length }}
               </p>
               <p>
                 Important Information:
                 {{ currentExperience.info }}
               </p>
-              <img v-bind:src="experience.image_url" v-bind:alt="experience.name" />
+              <img v-bind:src="currentExperience.image_url" v-bind:alt="experience.name" />
               <button>Close</button>
-              <button v-on:click="updateListItem()">Add to the list</button>
+              <button v-on:click="createListItem()">Add to the list</button>
             </form>
           </dialog>
         </div>
@@ -67,14 +76,17 @@ export default {
       errors: [],
       currentExperience: {},
       location: "",
+      tags: [],
+      tag: "",
     };
   },
   created: function () {
     this.indexExperiences();
+    this.indexTags();
   },
   computed: {
-    filterByLocation: function () {
-      return this.experiences.filter((experience) => !experience.location.indexOf(this.location));
+    filterExperiences: function () {
+      return this.filterByLocation(this.filterByTag(this.experiences));
     },
   },
   methods: {
@@ -84,21 +96,37 @@ export default {
         this.experiences = response.data;
       });
     },
+    indexTags: function () {
+      axios.get("api/tags").then((response) => {
+        console.log(response.data);
+        this.tags = response.data;
+      });
+    },
+    filterByLocation: function () {
+      return this.experiences.filter((experience) => !experience.location.indexOf(this.location));
+    },
+    filterByTag: function () {
+      console.log(this.experiences);
+      return this.experiences.filter((experience) => !experience.name.indexOf(this.tag));
+    },
     showExperience: function (experience) {
       console.log(experience);
       this.currentExperience = experience;
       document.querySelector("#experience-show").showModal();
       localStorage.setItem("experience_id", experience.id) === true;
     },
-    updateListItem: function () {
-      console.log("adding experience to list item");
+    createListItem: function () {
+      console.log("adding experience as a list item");
       var params = {
-        // user_id: localStorage.getItem("user_id"),
+        user_id: localStorage.getItem("user_id"),
         experience_id: localStorage.getItem("experience_id"),
+        date: localStorage.getItem("date"),
       };
       axios
-        .patch("api/list_items" + this.list_item.id, params)
+        .post("/api/list_items", params)
         .then(() => {
+          localStorage.removeItem("date");
+          localStorage.removeItem("experience_id");
           this.$router.push("/calendar");
         })
         .catch((error) => console.log(error.response));
