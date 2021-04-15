@@ -230,7 +230,11 @@ export default {
       }
     },
     editDates: function () {
-      document.querySelector("#edit-dates").showModal();
+      if (
+        confirm("Are you sure? Changing dates can result in deleted experiences if original dates arent included...")
+      ) {
+        document.querySelector("#edit-dates").showModal();
+      }
     },
     indexListItems: function () {
       axios.get("api/list_items").then((response) => {
