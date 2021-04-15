@@ -1,5 +1,6 @@
-<template slot="tag" slot-scope="props">
-  <div>
+<template>
+  <div></div>
+  <!-- <div>
     <label class="typo__label">Simple select / dropdown</label>
     <multiselect
       v-model="value"
@@ -19,7 +20,7 @@
       </template>
     </multiselect>
     <pre class="language-json"><code>{{ value  }}</code></pre>
-  </div>
+  </div> -->
   <!-- <h3>Filter By Category</h3>
     <select v-model="category">
       <option valeu="Accessories">Accessories</option>
@@ -37,55 +38,55 @@
 </template>
 
 <script>
-import Multiselect from "vue-multiselect";
-import axios from "axios";
+// import Multiselect from "vue-multiselect";
+// import axios from "axios";
 
-export default {
-  components: {
-    Multiselect,
-  },
-  data() {
-    return {
-      value: [],
-      options: [
-        { name: "Vue.js", language: "JavaScript" },
-        { name: "Adonis", language: "JavaScript" },
-        { name: "Rails", language: "Ruby" },
-        { name: "Sinatra", language: "Ruby" },
-        { name: "Laravel", language: "PHP" },
-        { name: "Phoenix", language: "Elixir" },
-      ],
-      experiences: [],
-      tags: [],
-    };
-  },
-  created: function () {
-    this.indexExperiences();
-    this.indexTags();
-  },
-  methods: {
-    indexExperiences: function () {
-      axios.get("api/experiences").then((response) => {
-        console.log(response.data);
-        this.experiences = response.data;
-      });
-    },
-    indexTags: function () {
-      axios.get("api/tags").then((response) => {
-        console.log(response.data);
-        this.tags = response.data;
-      });
-    },
-  },
-  addTag(newTag) {
-    const tag = {
-      name: newTag,
-      code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
-    };
-    this.options.push(tag);
-    this.value.push(tag);
-  },
-};
+// export default {
+//   components: {
+//     Multiselect,
+//   },
+//   data() {
+//     return {
+//       value: [],
+//       options: [
+//         { name: "Vue.js", language: "JavaScript" },
+//         { name: "Adonis", language: "JavaScript" },
+//         { name: "Rails", language: "Ruby" },
+//         { name: "Sinatra", language: "Ruby" },
+//         { name: "Laravel", language: "PHP" },
+//         { name: "Phoenix", language: "Elixir" },
+//       ],
+//       experiences: [],
+//       tags: [],
+//     };
+//   },
+//   created: function () {
+//     this.indexExperiences();
+//     this.indexTags();
+//   },
+//   methods: {
+//     indexExperiences: function () {
+//       axios.get("api/experiences").then((response) => {
+//         console.log(response.data);
+//         this.experiences = response.data;
+//       });
+//     },
+//     indexTags: function () {
+//       axios.get("api/tags").then((response) => {
+//         console.log(response.data);
+//         this.tags = response.data;
+//       });
+//     },
+//   },
+//   addTag(newTag) {
+//     const tag = {
+//       name: newTag,
+//       code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
+//     };
+//     this.options.push(tag);
+//     this.value.push(tag);
+//   },
+// };
 // import axios from "axios";
 // import moment from "moment";
 // moment().format();

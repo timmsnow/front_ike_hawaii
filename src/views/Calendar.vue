@@ -202,7 +202,7 @@ export default {
         this.dates.push(q.toUTCString());
       }
       console.log(this.dates);
-      console.log(new Date(this.user.trip_end));
+      console.log(new Date(this.user.trip_end).toUTCString);
       // this.createDates();
     });
   },
