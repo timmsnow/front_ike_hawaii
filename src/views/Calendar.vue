@@ -10,11 +10,11 @@
       </ul>
       <div class="form-group">
         <label>Start Date:</label>
-        <input type="text" class="form-control" v-model="input_trip_start" />
+        <input type="text" class="form-control" v-model="input_trip_start" placeholder="ex. May 2 2021" />
       </div>
       <div class="form-group">
         <label>End Date:</label>
-        <input type="text" class="form-control" v-model="input_trip_end" />
+        <input type="text" class="form-control" v-model="input_trip_end" placeholder="ex. May 6 2021" />
       </div>
       <input type="submit" class="btn btn-primary" value="Submit" />
     </form>
@@ -29,13 +29,14 @@
         </ul>
         <div class="form-group">
           <label>Start Date:</label>
-          <input type="text" class="form-control" v-model="input_trip_start" />
+          <input type="text" class="form-control" v-model="input_trip_start" placeholder="ex. May 2 2021" />
         </div>
         <div class="form-group">
           <label>End Date:</label>
-          <input type="text" class="form-control" v-model="input_trip_end" />
+          <input type="text" class="form-control" v-model="input_trip_end" placeholder="ex. May 6 2021" />
         </div>
         <input type="submit" class="btn btn-primary" value="Submit" />
+        <button>Close</button>
       </form>
     </dialog>
     <!-- </div> -->
@@ -198,9 +199,10 @@ export default {
       let initialDate = new Date(this.user.trip_start),
         endDate = new Date(this.user.trip_end);
       for (let q = initialDate; q <= endDate; q.setDate(q.getDate() + 1)) {
-        this.dates.push(q.toDateString());
+        this.dates.push(q.toUTCString());
       }
       console.log(this.dates);
+      console.log(new Date(this.user.trip_end));
       // this.createDates();
     });
   },

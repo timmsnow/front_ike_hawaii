@@ -1,32 +1,26 @@
-<template>
-  <div class="test">
-    <div>
-      <label class="typo__label">Simple select / dropdown</label>
-      <multiselect
-        v-model="options"
-        :options="options"
-        :multiple="true"
-        :close-on-select="false"
-        :clear-on-select="false"
-        :preserve-search="true"
-        placeholder="Pick some"
-        label="name"
-        track-by="name"
-        :preselect-first="true"
-      >
-        <template slot="selection" slot-scope="{ values, search, isOpen }">
-          <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">
-            {{ values.length }} options selected
-          </span>
-        </template>
-      </multiselect>
-      <pre class="language-json"><code><div v-for="option in options" v-bind:key="option">
-{{option.name}}
-        </div>
-
-        </code></pre>
-    </div>
-    <!-- <h3>Filter By Category</h3>
+<template slot="tag" slot-scope="props">
+  <div>
+    <label class="typo__label">Simple select / dropdown</label>
+    <multiselect
+      v-model="value"
+      tag-placeholder="Add this as new tag"
+      placeholder="Search or add a tag"
+      label="name"
+      track-by="code"
+      :options="experiences"
+      :multiple="true"
+      :taggable="true"
+      @tag="addTag"
+    >
+      <template slot="selection" slot-scope="{ values, search, isOpen }">
+        <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">
+          {{ values.length }} options selected
+        </span>
+      </template>
+    </multiselect>
+    <pre class="language-json"><code>{{ value  }}</code></pre>
+  </div>
+  <!-- <h3>Filter By Category</h3>
     <select v-model="category">
       <option valeu="Accessories">Accessories</option>
       <option valeu="Laptop">Laptop</option>
@@ -38,13 +32,13 @@
       </li>
     </ul> -->
 
-    <!-- <button v-on:click="createDates()">do it</button> -->
-    <!-- <ul></ul> -->
-  </div>
+  <!-- <button v-on:click="createDates()">do it</button> -->
+  <!-- <ul></ul> -->
 </template>
 
 <script>
 import Multiselect from "vue-multiselect";
+import axios from "axios";
 
 export default {
   components: {
@@ -61,7 +55,35 @@ export default {
         { name: "Laravel", language: "PHP" },
         { name: "Phoenix", language: "Elixir" },
       ],
+      experiences: [],
+      tags: [],
     };
+  },
+  created: function () {
+    this.indexExperiences();
+    this.indexTags();
+  },
+  methods: {
+    indexExperiences: function () {
+      axios.get("api/experiences").then((response) => {
+        console.log(response.data);
+        this.experiences = response.data;
+      });
+    },
+    indexTags: function () {
+      axios.get("api/tags").then((response) => {
+        console.log(response.data);
+        this.tags = response.data;
+      });
+    },
+  },
+  addTag(newTag) {
+    const tag = {
+      name: newTag,
+      code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
+    };
+    this.options.push(tag);
+    this.value.push(tag);
   },
 };
 // import axios from "axios";

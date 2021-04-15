@@ -98,7 +98,6 @@ export default {
     },
     indexTags: function () {
       axios.get("api/tags").then((response) => {
-        console.log(response.data);
         this.tags = response.data;
       });
     },
@@ -106,7 +105,7 @@ export default {
       return this.experiences.filter((experience) => !experience.location.indexOf(this.location));
     },
     filterByTag: function () {
-      console.log(this.experiences);
+      console.log(this.tags[3]);
       return this.experiences.filter((experience) => !experience.name.indexOf(this.tag));
     },
     showExperience: function (experience) {
