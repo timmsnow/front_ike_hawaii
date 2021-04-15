@@ -14,7 +14,7 @@
       </select>
     </div>
     <span id="tags">
-      <div v-for="tag in tags" :key="tag">
+      <div v-for="tag in tags" :key="tag.id">
         <input type="checkbox" id="toggle" :value="tag" v-model="selectedTags" />
         <label for="tag">{{ tag.name }}</label>
       </div>
