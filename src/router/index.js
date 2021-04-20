@@ -24,6 +24,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ "../views/Test.vue"),
   },
   {
+    path: "/test-calendar",
+    name: "TestCalendar",
+    // route level code-splitting
+    // this generates a separate chunk (TestCalendar.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ "../views/TestCalendar.vue"),
+  },
+  {
     path: "/new-test",
     name: "NewTest",
     // route level code-splitting

@@ -45,6 +45,7 @@
 </style>
 
 <script>
+
 export default {
   methods: {
     ifLoggedIn: function () {

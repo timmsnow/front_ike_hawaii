@@ -21,13 +21,6 @@
     </span>
     <div class="container">
       <div class="row">
-        <!-- <div
-          class="card"
-          style="width: 18rem"
-          id="index"
-          v-for="experience in filterExperiences"
-          v-bind:key="experience.id"
-        > -->
         <div
           class="card"
           style="width: 18rem"

@@ -1,6 +1,5 @@
 <template>
   <div class="calendar-page">
-    <!-- <div v-on:submit.prevent="calendarAppear()" class="inputs"> -->
     <form v-on:submit.prevent="updateUser(user)" v-if="noDates()">
       <h1>When will you be coming to our island?</h1>
       <ul>
@@ -8,13 +7,13 @@
           {{ error }}
         </li>
       </ul>
-      <div class="form-group">
-        <label>Start Date:</label>
-        <input type="text" class="form-control" v-model="input_trip_start" placeholder="ex. May 2 2021" />
+      <div>
+        <label for="example-datepicker">Arrival</label>
+        <b-form-datepicker id="example-datepicker" v-model="inputTripStart" class="mb-2"></b-form-datepicker>
       </div>
-      <div class="form-group">
-        <label>End Date:</label>
-        <input type="text" class="form-control" v-model="input_trip_end" placeholder="ex. May 6 2021" />
+      <div>
+        <label for="example-datepicker">Departure</label>
+        <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
       </div>
       <input type="submit" class="btn btn-primary" value="Submit" />
     </form>
@@ -27,13 +26,13 @@
             {{ error }}
           </li>
         </ul>
-        <div class="form-group">
-          <label>Start Date:</label>
-          <input type="text" class="form-control" v-model="input_trip_start" placeholder="ex. May 2 2021" />
+        <div>
+          <label for="example-datepicker">Arrival</label>
+          <b-form-datepicker id="example-datepicker" v-model="inputTripStart" class="mb-2"></b-form-datepicker>
         </div>
-        <div class="form-group">
-          <label>End Date:</label>
-          <input type="text" class="form-control" v-model="input_trip_end" placeholder="ex. May 6 2021" />
+        <div>
+          <label for="example-datepicker">Departure</label>
+          <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
         </div>
         <input type="submit" class="btn btn-primary" value="Submit" />
         <button>Close</button>
@@ -54,30 +53,29 @@
                 <div class="item-container" v-for="list_item in filterByUserAndDate" v-bind:key="list_item.id">
                   <div class="filter" v-if="list_item.date == date">
                     <p>Experience: {{ list_item.experience_info.name }}</p>
-                    <!-- <p>Recommended Length of Stay: {{ list_item.experience_info.length }}</p>
-                    <p>Best Time of Day: {{ list_item.experience_info.time }}</p> -->
+
                     <button v-on:click="destroyListItem(list_item)">Remove Experience</button>
                     <button v-on:click="showListItem(list_item)">Show More Info</button>
+                    <hr />
                     <dialog id="item-show">
                       <form method="dialog">
-                        <h1>Name: {{ list_item.experience_info.name }}</h1>
-                        <p>Location: {{ list_item.experience_info.location }}</p>
-                        <p>Stay For: {{ list_item.experience_info.length }}</p>
-                        <p>Best Time to Visit: {{ list_item.experience_info.time }}</p>
-                        <p>Important Information: {{ list_item.experience_info.info }}</p>
+                        <!-- <h1>Name: {{ selectedListItem.experience_info.name }}</h1> -->
+                        <!-- <p>Location: {{ selectedListItem.experience_info.location }}</p>
+                        <p>Stay For: {{ selectedListItem.experience_info.length }}</p>
+                        <p>Best Time to Visit: {{ selectedListItem.experience_info.time }}</p>
+                        <p>Important Information: {{ selectedListItem.experience_info.info }}</p>
                         <img
-                          v-bind:src="list_item.experience_info.image_url"
-                          v-bind:alt="list_item.experience_info.name"
+                          v-bind:src="selectedListItem.experience_info.image_url"
+                          v-bind:alt="selectedListItem.experience_info.name"
                         />
-
-                        <button>Close</button>
+                        <button v-on:click="destroyListItem(list_item)">Remove Experience</button>
+                        <button>Close</button> -->
                       </form>
                     </dialog>
-                    <hr />
                   </div>
                 </div>
                 <router-link to="/experiences">
-                  <button class="button" ref="button" v-on:click="storeDate(date)">Add another Experience</button>
+                  <button class="button" ref="button" v-on:click="storeDate(date)">Add Experience</button>
                 </router-link>
               </li>
             </div>
@@ -167,6 +165,10 @@ router-link {
   margin-left: auto;
   margin-right: auto;
 }
+
+#edit-dates {
+  padding: 10%;
+}
 </style>
 
 <script>
@@ -180,10 +182,11 @@ export default {
       user_id: localStorage.getItem("user_id"),
       list_items: [],
       experiences: [],
-      input_trip_start: "",
-      input_trip_end: "",
+      inputTripStart: "",
+      inputTripEnd: "",
       dates: [],
       list_item: {},
+      selectedListItem: {},
     };
   },
   created: function () {
@@ -191,7 +194,6 @@ export default {
       this.user = response.data;
     });
     this.indexListItems();
-    // this.indexExperiences();
   },
   mounted: function () {
     axios.get(`/api/users/${this.user_id}`).then((response) => {
@@ -199,11 +201,15 @@ export default {
       let initialDate = new Date(this.user.trip_start),
         endDate = new Date(this.user.trip_end);
       for (let q = initialDate; q <= endDate; q.setDate(q.getDate() + 1)) {
-        this.dates.push(q.toUTCString());
+        var d = q.toUTCString();
+        var array = d.split(" ");
+        var e = array[1];
+        var h = array[0];
+        var f = array[2];
+        var g = array[3];
+        var a = h + " " + e + " " + f + " " + g;
+        this.dates.push(a);
       }
-      console.log(this.dates);
-      console.log(new Date(this.user.trip_end).toUTCString);
-      // this.createDates();
     });
   },
   computed: {
@@ -217,8 +223,8 @@ export default {
     updateUser: function () {
       console.log("updating user trip info");
       var params = {
-        trip_start: this.input_trip_start,
-        trip_end: this.input_trip_end,
+        trip_start: this.inputTripStart,
+        trip_end: this.inputTripEnd,
       };
       console.log(this.user);
       axios.patch("/api/users/" + this.user_id, params).catch((error) => console.log(error.response));
@@ -236,17 +242,17 @@ export default {
         document.querySelector("#edit-dates").showModal();
       }
     },
+    storeDate: function (date) {
+      localStorage.setItem("date", date) === true;
+    },
     indexListItems: function () {
       axios.get("api/list_items").then((response) => {
         this.list_items = response.data;
       });
     },
-    storeDate: function (date) {
-      localStorage.setItem("date", date) === true;
-    },
     showListItem: function (list_item) {
       console.log(list_item);
-      this.list_item = list_item;
+      this.selectedListItem = list_item;
       document.querySelector("#item-show").showModal();
     },
     destroyListItem: function (list_item) {
