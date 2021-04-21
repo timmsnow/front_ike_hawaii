@@ -69,7 +69,6 @@
 
 <script>
 /* global mapboxgl */
-/* global MapboxGeocoder */
 
 import axios from "axios";
 import Vue2Filters from "vue2-filters";
@@ -90,9 +89,6 @@ export default {
     this.indexExperiences();
     this.indexTags();
   },
-  // mounted: function () {
-  //   this.setUpMap();
-  // },
   computed: {
     filteredByTag() {
       return this.getByTag(this.experiences, this.selectedTags);
@@ -145,68 +141,13 @@ export default {
         zoom: 7, // starting zoom
       });
       console.log(map);
-      var coordinatesGeocoder = function (query) {
-        // Match anything which looks like
-        // decimal degrees coordinate pair.
-        var matches = query.match(/^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i);
-        if (!matches) {
-          return null;
-        }
-
-        function coordinateFeature(lng, lat) {
-          return {
-            center: [lng, lat],
-            geometry: {
-              type: "Point",
-              coordinates: [lng, lat],
-            },
-            place_name: "Lat: " + lat + " Lng: " + lng,
-            place_type: ["coordinate"],
-            properties: {},
-            type: "Feature",
-          };
-        }
-
-        var coord1 = Number(matches[1]);
-        var coord2 = Number(matches[2]);
-        var geocodes = [];
-
-        if (coord1 < -90 || coord1 > 90) {
-          // must be lng, lat
-          geocodes.push(coordinateFeature(coord1, coord2));
-        }
-
-        if (coord2 < -90 || coord2 > 90) {
-          // must be lat, lng
-          geocodes.push(coordinateFeature(coord2, coord1));
-        }
-
-        if (geocodes.length === 0) {
-          // else could be either lng, lat or lat, lng
-          geocodes.push(coordinateFeature(coord1, coord2));
-          geocodes.push(coordinateFeature(coord2, coord1));
-        }
-
-        return geocodes;
-      };
-
-      // Add the control to the map.
-      map.addControl(
-        new MapboxGeocoder({
-          accessToken: mapboxgl.accessToken,
-          localGeocoder: coordinatesGeocoder,
-          zoom: 4,
-          placeholder: this.currentExperience.location,
-          mapboxgl: mapboxgl,
-        })
-      );
-      // var marker = new mapboxgl.Marker().setLngLat(this.coordinates[0]).addTo(map);
-      // console.log(popup);
-      // console.log(marker);
-      // var popup = new mapboxgl.Popup({ closeOnClick: false, offset: 50 })
-      //   .setLngLat([-154.9291, 19.3947])
-      //   .setHTML("Kahena Beach")
-      //   .addTo(map);
+      var marker = new mapboxgl.Marker().setLngLat([this.currentExperience.lat, this.currentExperience.lng]).addTo(map);
+      console.log(popup);
+      console.log(marker);
+      var popup = new mapboxgl.Popup({ closeOnClick: false, offset: 35 })
+        .setLngLat([this.currentExperience.lat, this.currentExperience.lng])
+        .setHTML(this.currentExperience.name)
+        .addTo(map);
     },
     createListItem: function () {
       console.log("adding experience as a list item");
