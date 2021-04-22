@@ -55,28 +55,17 @@
                     <p>Experience: {{ list_item.experience_info.name }}</p>
 
                     <button v-on:click="destroyListItem(list_item)">Remove Experience</button>
-                    <button v-on:click="showListItem(list_item)">Show More Info</button>
                     <hr />
-                    <dialog id="item-show">
-                      <form method="dialog">
-                        <!-- <h1>Name: {{ selectedListItem.experience_info.name }}</h1> -->
-                        <!-- <p>Location: {{ selectedListItem.experience_info.location }}</p>
-                        <p>Stay For: {{ selectedListItem.experience_info.length }}</p>
-                        <p>Best Time to Visit: {{ selectedListItem.experience_info.time }}</p>
-                        <p>Important Information: {{ selectedListItem.experience_info.info }}</p>
-                        <img
-                          v-bind:src="selectedListItem.experience_info.image_url"
-                          v-bind:alt="selectedListItem.experience_info.name"
-                        />
-                        <button v-on:click="destroyListItem(list_item)">Remove Experience</button>
-                        <button>Close</button> -->
-                      </form>
-                    </dialog>
                   </div>
                 </div>
-                <router-link to="/experiences">
-                  <button class="button" ref="button" v-on:click="storeDate(date)">Add Experience</button>
-                </router-link>
+                <div id="buttons">
+                  <router-link to="/experiences">
+                    <button class="button" ref="button" v-on:click="storeDate(date)">Add Experience</button>
+                  </router-link>
+                  <router-link to="/day-show">
+                    <button class="button" ref="button" v-on:click="storeDate(date)">Show Full Day Details</button>
+                  </router-link>
+                </div>
               </li>
             </div>
           </ul>
@@ -169,6 +158,10 @@ router-link {
 #edit-dates {
   padding: 10%;
 }
+
+#buttons {
+  display: flex;
+}
 </style>
 
 <script>
@@ -249,11 +242,6 @@ export default {
       axios.get("api/list_items").then((response) => {
         this.list_items = response.data;
       });
-    },
-    showListItem: function (list_item) {
-      console.log(list_item);
-      this.selectedListItem = list_item;
-      document.querySelector("#item-show").showModal();
     },
     destroyListItem: function (list_item) {
       axios.delete("/api/list_items/" + list_item.id).then(() => {

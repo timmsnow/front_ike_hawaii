@@ -5,7 +5,8 @@ import Login from "../views/Login.vue";
 import Logout from "../views/Logout.vue";
 import Calendar from "../views/Calendar.vue";
 import ExperienceIndex from "../views/ExperienceIndex.vue";
-import ListIndex from "../views/ListIndex.vue";
+import TestListIndex from "../views/TestListIndex.vue";
+import DayShow from "../views/DayShow.vue";
 
 Vue.use(VueRouter);
 
@@ -14,6 +15,11 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+  },
+  {
+    path: "/day-show",
+    name: "DayShow",
+    component: DayShow,
   },
   {
     path: "/test",
@@ -33,11 +39,11 @@ const routes = [
   },
   {
     path: "/new-test",
-    name: "NewTest",
+    name: "TestTags",
     // route level code-splitting
     // this generates a separate chunk (Test.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ "../views/NewTest.vue"),
+    component: () => import(/* webpackChunkName: "about" */ "../views/TestTags.vue"),
   },
   {
     path: "/login",
@@ -62,7 +68,7 @@ const routes = [
   {
     path: "/lists",
     name: "list-index",
-    component: ListIndex,
+    component: TestListIndex,
   },
 ];
 

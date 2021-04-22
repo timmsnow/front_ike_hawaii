@@ -51,8 +51,10 @@
                 Important Information:
                 {{ currentExperience.info }}
               </p>
-              <div id="map"></div>
-              <img v-bind:src="currentExperience.image_url" v-bind:alt="experience.name" />
+              <div id="pic-container">
+                <div id="map"></div>
+                <img v-bind:src="currentExperience.image_url" v-bind:alt="experience.name" />
+              </div>
               <br />
               <button>Close</button>
               <button v-on:click="createListItem()">Add to the list</button>
@@ -137,8 +139,8 @@ export default {
       var map = new mapboxgl.Map({
         container: "map", // container id
         style: "mapbox://styles/mapbox/streets-v11", // style URL
-        center: [-155.2335, 19.4422], // starting position [lng, lat]
-        zoom: 7, // starting zoom
+        center: [-155.5765, 19.5364], // starting position [lng, lat]
+        zoom: 6.8, // starting zoom
       });
       console.log(map);
       var marker = new mapboxgl.Marker().setLngLat([this.currentExperience.lat, this.currentExperience.lng]).addTo(map);
@@ -175,7 +177,7 @@ export default {
   display: inline-flex;
 }
 img {
-  max-width: 500px;
+  max-width: 300px;
 }
 
 .card {
@@ -190,5 +192,18 @@ img {
 #map {
   height: 300px;
   width: 300px;
+}
+
+#pic-container {
+  display: flex;
+  gap: 2%;
+}
+
+#tags {
+  display: flex;
+  gap: 1%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  justify-content: center;
 }
 </style>
