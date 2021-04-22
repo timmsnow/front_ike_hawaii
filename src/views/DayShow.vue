@@ -1,6 +1,7 @@
 <template>
   <div id="day-show">
     <h1>{{ date }}</h1>
+    <div id="map"></div>
 
     <!-- ---MAP VIEW--- -->
     <div class="item-container" v-for="list_item in filterByUserAndDate" v-bind:key="list_item.id">
@@ -31,6 +32,8 @@
 </template>
 
 <script>
+/* global mapboxgl */
+
 import axios from "axios";
 
 export default {
@@ -61,16 +64,45 @@ export default {
     indexListItems: function () {
       axios.get("api/list_items").then((response) => {
         this.list_items = response.data;
+        var currentDate = localStorage.getItem("date");
+        this.list_items.map((item) => {
+          if (item.date == currentDate) {
+            this.experiences.push(item.experience_info);
+          }
+        });
+        this.setUpMap();
+        // var current = this.list_items.where(this.list_items.date === localStorage.getItem("date"));
+        console.log(this.experiences);
       });
     },
     removeDate: function () {
       localStorage.removeItem("date");
+    },
+    setUpMap: function () {
+      mapboxgl.accessToken = process.env.VUE_APP_MAPBOX_API_KEY;
+      var map = new mapboxgl.Map({
+        container: "map", // container id
+        style: "mapbox://styles/mapbox/streets-v11", // style URL
+        center: [-155.5765, 19.5364], // starting position [lng, lat]
+        zoom: 6.8, // starting zoom
+      });
+      console.log(this.experiences.length);
+      for (var i = 0; i < this.experiences.length; i++) {
+        var marker = new mapboxgl.Marker().setLngLat([this.experiences[i].lat, this.experiences[i].lng]).addTo(map);
+        console.log(marker);
+        console.log(popup);
+        var popup = new mapboxgl.Popup({ closeOnClick: false, offset: 35 })
+          .setLngLat([this.experiences[i].lat, this.experiences[i].lng])
+          .setHTML(this.experiences[i].name)
+          .addTo(map);
+      }
     },
   },
 };
 </script>
 
 <style scoped>
+/* delete this styling (temp fix),  */
 .filter {
   margin-left: 10%;
   margin-right: 10%;
@@ -82,5 +114,10 @@ export default {
   justify-content: center;
   margin-top: 5%;
   margin-bottom: 2%;
+}
+
+#map {
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>

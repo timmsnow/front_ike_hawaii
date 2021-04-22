@@ -144,12 +144,12 @@ export default {
       });
       console.log(map);
       var marker = new mapboxgl.Marker().setLngLat([this.currentExperience.lat, this.currentExperience.lng]).addTo(map);
-      console.log(popup);
+      // console.log(popup);
       console.log(marker);
-      var popup = new mapboxgl.Popup({ closeOnClick: false, offset: 35 })
-        .setLngLat([this.currentExperience.lat, this.currentExperience.lng])
-        .setHTML(this.currentExperience.name)
-        .addTo(map);
+      // var popup = new mapboxgl.Popup({ closeOnClick: false, offset: 35 })
+      //   .setLngLat([this.currentExperience.lat, this.currentExperience.lng])
+      //   .setHTML(this.currentExperience.name)
+      //   .addTo(map);
     },
     createListItem: function () {
       console.log("adding experience as a list item");
@@ -201,6 +201,7 @@ img {
 
 #tags {
   display: flex;
+  flex-wrap: wrap;
   gap: 1%;
   margin-top: 2%;
   margin-bottom: 2%;
