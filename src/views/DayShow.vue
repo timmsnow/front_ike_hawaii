@@ -10,15 +10,19 @@
           <div>
             <h2>Experience: {{ list_item.experience_info.name }}</h2>
             <p>Location: {{ list_item.experience_info.location }}</p>
+            <p>Description: {{ list_item.experience_info.description }}</p>
             <p>Recommended Length of Time: {{ list_item.experience_info.length }}</p>
             <p>Best Time to Visit: {{ list_item.experience_info.time }}</p>
-            <p>Description: {{ list_item.experience_info.info }}</p>
-            <p>Relevant Links: {{ list_item.experience_info.links }}</p>
+            <p>Important Information: {{ list_item.experience_info.info }}</p>
+            <!-- <p>
+              Relevant Links:
+              <a href="https://umaumaexperience.com/">{{ list_item.experience_info.links }}</a>
+            </p> -->
           </div>
           <img v-bind:src="list_item.experience_info.image_url" v-bind:alt="list_item.name" />
         </div>
 
-        <button v-on:click="destroyListItem(list_item)">Remove Experience</button>
+        <!-- <button v-on:click="destroyListItem(list_item)">Remove Experience</button> -->
         <hr />
 
         <!-- DRIVING TIME -->

@@ -224,7 +224,7 @@ export default {
       this.$router.go();
     },
     noDates: function () {
-      if (this.user.trip_start === null || this.user.trip_start === null) {
+      if (this.user.trip_start === null) {
         return true;
       }
     },

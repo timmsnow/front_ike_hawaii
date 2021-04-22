@@ -6,11 +6,15 @@
     <p>Experience in</p>
     <div>
       <select v-model="location">
-        <option valeu="Hilo Area">Hilo Area</option>
+        <option valeu="North Hilo">North Hilo</option>
+        <option valeu="South Hilo">South Hilo</option>
         <option valeu="Puna">Puna</option>
-        <option valeu="Waimea/North Coast">Waimea/North Coast</option>
-        <option valeu="Kailua-Kona">Kailua-Kona</option>
-        <option valeu="Captain Cook + South">Captain Cook + South</option>
+        <option valeu="Ka'u">Ka'u</option>
+        <option valeu="North Kona">North Kona</option>
+        <option valeu="South Kona">South Kona</option>
+        <option valeu="Hamakua">Hamakua</option>
+        <option valeu="North Kohala">North Kohala</option>
+        <option valeu="South Kohala">South Kohala</option>
       </select>
     </div>
     <span id="tags">
@@ -42,6 +46,10 @@
               <p>
                 Location on the Island:
                 {{ currentExperience.location }}
+              </p>
+              <p>
+                Description:
+                {{ currentExperience.description }}
               </p>
               <p>
                 Recommended Length of Stay:
@@ -194,9 +202,15 @@ img {
   width: 300px;
 }
 
+#experience-show {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
 #pic-container {
   display: flex;
   gap: 2%;
+  justify-content: center;
 }
 
 #tags {
