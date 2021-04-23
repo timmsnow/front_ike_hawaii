@@ -2,11 +2,12 @@
   <div class="about">
     <h1>This is an about page</h1>
     <!-- MAP -->
-    <div id="map" v-for="coordinate in coordinates" v-bind:key="coordinate.id"></div>
+    <div id="map"></div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 /* global mapboxgl */
 export default {
   data: function () {
@@ -16,10 +17,12 @@ export default {
         [-155.9969, 19.64],
         [-155.0868, 19.7241],
       ],
+      durations: [],
     };
   },
   mounted: function () {
     this.setUpMap();
+    this.getDriveTime();
   },
   methods: {
     setUpMap: function () {
@@ -38,10 +41,26 @@ export default {
       //   .setHTML("Kahena Beach")
       //   .addTo(map);
     },
+    getDriveTime: function () {
+      mapboxgl.accessToken = process.env.VUE_APP_MAPBOX_API_KEY;
+      axios
+        .get(
+          "https://api.mapbox.com/directions-matrix/v1/mapbox/driving/" +
+            `${this.coordinates[0]}` +
+            ";" +
+            `${this.coordinates[1]}` +
+            "?access_token=" +
+            `${mapboxgl.accessToken}`
+        )
+        .then((response) => {
+          this.durations = response.data;
+          console.log(this.coordinates[0]);
+          console.log(this.durations.durations[0][1] / 60);
+        });
+    },
   },
 };
 </script>
-
 <style>
 body {
   margin: 0;

@@ -8,7 +8,7 @@
       <div class="filter" v-if="list_item.date == date">
         <div id="list-item-container">
           <div>
-            <h2>Experience: {{ list_item.experience_info.name }}</h2>
+            <h2>{{ list_item.experience_info.name }}</h2>
             <p>Location: {{ list_item.experience_info.location }}</p>
             <p>Description: {{ list_item.experience_info.description }}</p>
             <p>Recommended Length of Time: {{ list_item.experience_info.length }}</p>
@@ -24,7 +24,7 @@
 
         <!-- <button v-on:click="destroyListItem(list_item)">Remove Experience</button> -->
         <hr />
-
+        <p>Approximate driving time between destinations: {{ displayDriveTime() }} minutes</p>
         <!-- DRIVING TIME -->
         <hr />
       </div>
@@ -49,6 +49,8 @@ export default {
       date: localStorage.getItem("date"),
       list_items: [],
       experiences: [],
+      durations: [],
+      drivingTimes: [],
     };
   },
   created: function () {
@@ -76,7 +78,6 @@ export default {
         });
         this.setUpMap();
         // var current = this.list_items.where(this.list_items.date === localStorage.getItem("date"));
-        console.log(this.experiences);
       });
     },
     removeDate: function () {
@@ -90,16 +91,59 @@ export default {
         center: [-155.5765, 19.5364], // starting position [lng, lat]
         zoom: 6.8, // starting zoom
       });
-      console.log(this.experiences.length);
+      // console.log(this.experiences.length);
+      // for (var i = 0; i < this.experiences.length; i++) {
+      //   var marker = new mapboxgl.Marker().setLngLat([this.experiences[i].lat, this.experiences[i].lng]).addTo(map);
+      //   console.log(marker);
+      //   console.log(popup);
+      //   var popup = new mapboxgl.Popup({ closeOnClick: false, offset: 35 })
+      //     .setLngLat([this.experiences[i].lat, this.experiences[i].lng])
+      //     .setHTML(this.experiences[i].name)
+      //     .addTo(map);
+      // }
+      console.log(map);
+      this.getDriveTime();
+    },
+    getDriveTime: function () {
+      mapboxgl.accessToken = process.env.VUE_APP_MAPBOX_API_KEY;
+      var coordinates = [];
       for (var i = 0; i < this.experiences.length; i++) {
-        var marker = new mapboxgl.Marker().setLngLat([this.experiences[i].lat, this.experiences[i].lng]).addTo(map);
-        console.log(marker);
-        console.log(popup);
-        var popup = new mapboxgl.Popup({ closeOnClick: false, offset: 35 })
-          .setLngLat([this.experiences[i].lat, this.experiences[i].lng])
-          .setHTML(this.experiences[i].name)
-          .addTo(map);
+        coordinates.push(this.experiences[i].lat, this.experiences[i].lng);
       }
+      for (var k = 0, j = 1; j < coordinates.length; k = k + 2, j = j + 2) {
+        coordinates.join(",");
+        coordinates[k] = coordinates[k] + ",";
+        coordinates[j] = coordinates[j] + ";";
+      }
+      var coordinateString = coordinates.join("").slice(0, -1);
+      console.log(coordinateString);
+      axios
+        .get(
+          "https://api.mapbox.com/directions-matrix/v1/mapbox/driving/" +
+            `${coordinateString}` +
+            "?access_token=" +
+            `${mapboxgl.accessToken}`
+        )
+        .then((response) => {
+          this.durations = response.data;
+          var matrix = this.durations.durations;
+          for (var i = 0, j = 1; j < this.experiences.length; i++, j++) {
+            this.drivingTimes.push((matrix[i][j] / 60) | 0);
+          }
+          console.log(this.drivingTimes);
+          this.drivingTimes;
+        });
+    },
+    displayDriveTime: function () {
+      this.drivingTimes.forEach((num, index) => {
+        // const num2 = this.experiences[index];
+        console.log(num, index);
+      });
+      // for (var i = 0; i < this.drivingTimes.length; i++) {
+      //   var time = this.drivingTimes[i];
+      //   console.log(time);
+      //   // return time;
+      // }
     },
   },
 };
