@@ -1,53 +1,39 @@
 <template>
   <div id="day-show">
     <h1>{{ date }}</h1>
-
-    <!-- ---MAP VIEW--- -->
     <div id="map"></div>
 
-    <div class="item-container" v-for="(experience, index) in experiences" v-bind:key="index">
-      <div class="filter">
+    <!-- ---MAP VIEW--- -->
+    <div class="item-container" v-for="list_item in filterByUserAndDate" v-bind:key="list_item.id">
+      <div class="filter" v-if="list_item.date == date">
         <div id="list-item-container">
           <div>
-            <h2>{{ experience.name }}</h2>
-            <p>Location: {{ experience.location }}</p>
-            <p>Description: {{ experience.description }}</p>
-            <p>Recommended Length of Time: {{ experience.length }}</p>
-            <p>Best Time to Visit: {{ experience.time }}</p>
-            <p>Important Information: {{ experience.info }}</p>
+            <h2>{{ list_item.experience_info.name }}</h2>
+            <p>Location: {{ list_item.experience_info.location }}</p>
+            <p>Description: {{ list_item.experience_info.description }}</p>
+            <p>Recommended Length of Time: {{ list_item.experience_info.length }}</p>
+            <p>Best Time to Visit: {{ list_item.experience_info.time }}</p>
+            <p>Important Information: {{ list_item.experience_info.info }}</p>
+            <!-- <p>
+              Relevant Links:
+              <a href="https://umaumaexperience.com/">{{ list_item.experience_info.links }}</a>
+            </p> -->
           </div>
-          <img v-bind:src="experience.image_url" v-bind:alt="experience.name" />
+          <img v-bind:src="list_item.experience_info.image_url" v-bind:alt="list_item.name" />
         </div>
 
-        <!-- <button v-on:click="destroyListItem(experience)">Remove Experience</button> -->
+        <!-- <button v-on:click="destroyListItem(list_item)">Remove Experience</button> -->
         <hr />
-        <div v-if="drivingTimes[index] != null">
-          Approximate driving time between {{ experiences[index].name }} and {{ experiences[index + 1].name }} is
-          {{ drivingTimes[index] }} minutes
-          <hr />
-        </div>
-      </div>
-    </div>
-    <!-- <h2>Time Tracker</h2>
-    <div id="time-tracker">
-      <div id="recommended-time">
-        <h3>How long would you like to stay?</h3>
-        <div v-for="experience in experiences" :key="experience.id">
-          <p>
-            {{ experience.name }}
-            <input type="text" :placeholder="experience.length" />
-          </p>
-        </div>
-      </div>
-      <div id="driving-time">
-        <h3>Approximate Driving Times</h3>
-        <p v-for="(time, index) in drivingTimes" :key="index">
-          Driving time between {{ experiences[index].name }} and {{ experiences[index + 1].name }} is
-          {{ drivingTimes[index] }} minutes
+        <!-- <div v-if="drivingTimes[index - 1] !== undefined"> -->
+        <p>
+          Approximate driving time between destinations:
+          {{ drivingTimes }} minutes
         </p>
+        <!-- DRIVING TIME -->
+        <hr />
+        <!-- </div> -->
       </div>
     </div>
-    <h3>Total Time:</h3> -->
     <router-link to="/calendar">
       <button class="button" ref="button" v-on:click="removeDate(date)">Return to Calendar</button>
     </router-link>
@@ -74,20 +60,32 @@ export default {
     };
   },
   created: function () {
-    axios.get("api/list_items").then((response) => {
-      this.list_items = response.data;
-      var currentDate = localStorage.getItem("date");
-      var currentUser = localStorage.getItem("user_id");
-      this.list_items.map((item) => {
-        if (item.date == currentDate && item.user_id == currentUser) {
-          this.experiences.push(item.experience_info);
-        }
-      });
-      this.setUpMap();
+    axios.get(`/api/users/${this.user_id}`).then((response) => {
+      this.user = response.data;
     });
+    this.indexListItems();
   },
-  computed: {},
+  computed: {
+    filterByUserAndDate: function () {
+      var current_user = localStorage.getItem("user_id");
+      //add logic to filter by date?
+      return this.list_items.filter((list_item) => list_item.user_id == current_user);
+    },
+  },
   methods: {
+    indexListItems: function () {
+      axios.get("api/list_items").then((response) => {
+        this.list_items = response.data;
+        var currentDate = localStorage.getItem("date");
+        var currentUser = localStorage.getItem("user_id");
+        this.list_items.map((item) => {
+          if (item.date == currentDate && item.user_id == currentUser) {
+            this.experiences.push(item.experience_info);
+          }
+        });
+        this.setUpMap();
+      });
+    },
     removeDate: function () {
       localStorage.removeItem("date");
     },
@@ -99,6 +97,7 @@ export default {
         center: [-155.5765, 19.5364], // starting position [lng, lat]
         zoom: 6.8, // starting zoom
       });
+      console.log(this.experiences.length);
       for (var i = 0; i < this.experiences.length; i++) {
         var marker = new mapboxgl.Marker().setLngLat([this.experiences[i].lat, this.experiences[i].lng]).addTo(map);
         console.log(marker);
@@ -108,7 +107,7 @@ export default {
           .setHTML(this.experiences[i].name)
           .addTo(map);
       }
-      // console.log(map);
+      console.log(map);
       this.getDriveTime();
     },
     getDriveTime: function () {
@@ -123,6 +122,7 @@ export default {
         coordinates[j] = coordinates[j] + ";";
       }
       var coordinateString = coordinates.join("").slice(0, -1);
+      console.log(coordinateString);
       axios
         .get(
           "https://api.mapbox.com/directions-matrix/v1/mapbox/driving/" +
@@ -136,8 +136,17 @@ export default {
           for (var i = 0, j = 1; j < this.experiences.length; i++, j++) {
             this.drivingTimes.push((matrix[i][j] / 60) | 0);
           }
+          console.log(this.drivingTimes);
           this.drivingTimes;
         });
+    },
+    displayDriveTime: function () {
+      // return the value of drivingTimes[i] where i matches experiences[i]
+      // for (var i = 0; i < this.drivingTimes.length; i++) {
+      //   var time = this.drivingTimes[i];
+      //   console.log(time);
+      //   // return time;
+      // }
     },
   },
 };
@@ -158,16 +167,8 @@ export default {
   margin-bottom: 2%;
 }
 
-#time-tracker {
-  display: flex;
-  gap: 5%;
-  margin-left: 5%;
-  margin-right: 5%;
-}
-
 #map {
   margin-left: auto;
   margin-right: auto;
-  justify-content: center;
 }
 </style>
