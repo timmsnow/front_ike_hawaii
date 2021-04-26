@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    <!-- <h2>Time Tracker</h2>
+    <h2>Time Tracker</h2>
     <div id="time-tracker">
       <div id="recommended-time">
         <h3>How long would you like to stay?</h3>
@@ -47,7 +47,7 @@
         </p>
       </div>
     </div>
-    <h3>Total Time:</h3> -->
+    <h3>Total Time:</h3>
     <router-link to="/calendar">
       <button class="button" ref="button" v-on:click="removeDate(date)">Return to Calendar</button>
     </router-link>
@@ -123,21 +123,23 @@ export default {
         coordinates[j] = coordinates[j] + ";";
       }
       var coordinateString = coordinates.join("").slice(0, -1);
-      axios
-        .get(
-          "https://api.mapbox.com/directions-matrix/v1/mapbox/driving/" +
-            `${coordinateString}` +
-            "?access_token=" +
-            `${mapboxgl.accessToken}`
-        )
-        .then((response) => {
-          this.durations = response.data;
-          var matrix = this.durations.durations;
-          for (var i = 0, j = 1; j < this.experiences.length; i++, j++) {
-            this.drivingTimes.push((matrix[i][j] / 60) | 0);
-          }
-          this.drivingTimes;
-        });
+      if (coordinates.length >= 4) {
+        axios
+          .get(
+            "https://api.mapbox.com/directions-matrix/v1/mapbox/driving/" +
+              `${coordinateString}` +
+              "?access_token=" +
+              `${mapboxgl.accessToken}`
+          )
+          .then((response) => {
+            this.durations = response.data;
+            var matrix = this.durations.durations;
+            for (var i = 0, j = 1; j < this.experiences.length; i++, j++) {
+              this.drivingTimes.push((matrix[i][j] / 60) | 0);
+            }
+            this.drivingTimes;
+          });
+      }
     },
   },
 };
