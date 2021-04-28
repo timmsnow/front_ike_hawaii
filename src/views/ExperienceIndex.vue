@@ -12,103 +12,100 @@
         <div id="district">
           <h2>{{ district }}</h2>
         </div>
-        <div id="filter-search">
-          <div class="row text-center">
-            <div class="col-md-4">
-              <img src="../assets/big-island-regional.png" usemap="#big-isle-map" id="image" />
-              <map name="big-isle-map">
-                <area
-                  target=""
-                  id="hamakua"
-                  shape="poly"
-                  coords="coords=“95,33,116,48,176,68,159,99,141,112,122,177,108,162,91,150,107,130,111,106,107,102,120,86,119,61,113,56,102,55,103,46,93,44,94,41”"
-                  @mouseover="hamakuaImage()"
-                  @mouseout="hawaiiImage()"
-                  v-on:click="filterByHamakua()"
-                  alt="hamakua"
-                  href="#"
-                />
-                <area
-                  target=""
-                  id="kohala"
-                  shape="poly"
-                  coords="“53,16,63,15,77,19,86,25,92,32,90,46,101,50,99,55,103,59,112,59,117,64,118,86,105,102,108,107,107,111,106,125,88,144,86,132,64,102,51,94,61,80,65,79,66,68,52,47,50,24,”"
-                  @mouseover="kohalaImage()"
-                  @mouseout="hawaiiImage()"
-                  v-on:click="filterByKohala()"
-                  alt="kohala"
-                  href="#"
-                />
-                <area
-                  target=""
-                  id="hilo"
-                  shape="poly"
-                  coords="“181,71,220,108,220,135,239,138,185,171,170,168,169,186,151,171,140,168,127,178,140,134,148,129,146,117,154,106,165,105,176,87”"
-                  @mouseover="hiloImage()"
-                  @mouseout="hawaiiImage()"
-                  v-on:click="filterByHilo()"
-                  alt="hilo"
-                  value="hilo"
-                  href="#"
-                />
-                <area
-                  target=""
-                  id="puna"
-                  shape="poly"
-                  coords="“244,142,245,157,278,181,277,191,222,230,193,209,193,201,171,180,172,176,190,179”"
-                  @mouseover="punaImage()"
-                  @mouseout="hawaiiImage()"
-                  v-on:click="filterByPuna()"
-                  alt="puna"
-                  href="#"
-                />
-                <area
-                  target=""
-                  id="Kau"
-                  shape="poly"
-                  coords="“214,235,194,239,185,235,122,274,99,314,51,280,89,251,88,237,113,200,107,198,114,182,128,185,140,175,153,178,173,196,179,197,189,204,187,211”"
-                  @mouseover="kauImage()"
-                  @mouseout="hawaiiImage()"
-                  v-on:click="filterByKau()"
-                  alt="Kau"
-                  href="#"
-                />
-                <area
-                  target=""
-                  id="kona"
-                  shape="poly"
-                  coords="“49,99,61,105,82,133,86,148,87,158,100,165,109,179,108,190,102,200,106,203,82,235,83,247,47,276,55,224,32,155,23,150,19,125,37,109,45,109”"
-                  @mouseover="konaImage()"
-                  @mouseout="hawaiiImage()"
-                  v-on:click="filterByKona()"
-                  alt="kona"
-                  href="#"
-                />
-              </map>
-              <div id="tag-and-button">
-                <div id="tag-display">
-                  <p v-if="location.length > 0 || selectedTags.length > 0">
-                    {{ selectedTagName }}
-                    <span v-if="location.length > 0 && selectedTags.length > 0">in</span>
-                    {{ location | capitalize }}
-                  </p>
-                </div>
-                <div id="button">
-                  <button v-if="location || selectedTags.length > 0" v-on:click="clearFilter()">Clear Filter</button>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <span id="tags">
-                <div v-for="tag in tags" :key="tag.id">
-                  <input type="checkbox" id="toggle" :value="tag" v-model="selectedTags" />
-                  <label for="tag">{{ tag.name }}</label>
-                </div>
-              </span>
+        <div class="row">
+          <div class="col-md-4">
+            <img src="../assets/big-island-regional.png" usemap="#big-isle-map" id="image" />
+            <map name="big-isle-map">
+              <area
+                target=""
+                id="hamakua"
+                shape="poly"
+                coords="coords=“95,33,116,48,176,68,159,99,141,112,122,177,108,162,91,150,107,130,111,106,107,102,120,86,119,61,113,56,102,55,103,46,93,44,94,41”"
+                @mouseover="hamakuaImage()"
+                @mouseout="hawaiiImage()"
+                v-on:click="filterByHamakua()"
+                alt="hamakua"
+                href="#"
+              />
+              <area
+                target=""
+                id="kohala"
+                shape="poly"
+                coords="“53,16,63,15,77,19,86,25,92,32,90,46,101,50,99,55,103,59,112,59,117,64,118,86,105,102,108,107,107,111,106,125,88,144,86,132,64,102,51,94,61,80,65,79,66,68,52,47,50,24,”"
+                @mouseover="kohalaImage()"
+                @mouseout="hawaiiImage()"
+                v-on:click="filterByKohala()"
+                alt="kohala"
+                href="#"
+              />
+              <area
+                target=""
+                id="hilo"
+                shape="poly"
+                coords="“181,71,220,108,220,135,239,138,185,171,170,168,169,186,151,171,140,168,127,178,140,134,148,129,146,117,154,106,165,105,176,87”"
+                @mouseover="hiloImage()"
+                @mouseout="hawaiiImage()"
+                v-on:click="filterByHilo()"
+                alt="hilo"
+                value="hilo"
+                href="#"
+              />
+              <area
+                target=""
+                id="puna"
+                shape="poly"
+                coords="“244,142,245,157,278,181,277,191,222,230,193,209,193,201,171,180,172,176,190,179”"
+                @mouseover="punaImage()"
+                @mouseout="hawaiiImage()"
+                v-on:click="filterByPuna()"
+                alt="puna"
+                href="#"
+              />
+              <area
+                target=""
+                id="Kau"
+                shape="poly"
+                coords="“214,235,194,239,185,235,122,274,99,314,51,280,89,251,88,237,113,200,107,198,114,182,128,185,140,175,153,178,173,196,179,197,189,204,187,211”"
+                @mouseover="kauImage()"
+                @mouseout="hawaiiImage()"
+                v-on:click="filterByKau()"
+                alt="Kau"
+                href="#"
+              />
+              <area
+                target=""
+                id="kona"
+                shape="poly"
+                coords="“49,99,61,105,82,133,86,148,87,158,100,165,109,179,108,190,102,200,106,203,82,235,83,247,47,276,55,224,32,155,23,150,19,125,37,109,45,109”"
+                @mouseover="konaImage()"
+                @mouseout="hawaiiImage()"
+                v-on:click="filterByKona()"
+                alt="kona"
+                href="#"
+              />
+            </map>
+          </div>
+          <div class="col-md-4" id="tags">
+            <div v-for="tag in tags" :key="tag.id">
+              <input type="checkbox" id="toggle" :value="tag" v-model="selectedTags" />
+              <label for="tag">{{ tag.name }}</label>
             </div>
           </div>
+        </div>
 
-          <!-- <div class="col-md-4">
+        <div id="tag-and-button">
+          <div id="tag-display">
+            <p v-if="location.length > 0 || selectedTags.length > 0">
+              {{ selectedTagName }}
+              <span v-if="location.length > 0 && selectedTags.length > 0">in</span>
+              {{ location | capitalize }}
+            </p>
+          </div>
+          <div id="button">
+            <button v-if="location || selectedTags.length > 0" v-on:click="clearFilter()">Clear Filter</button>
+          </div>
+        </div>
+        <!-- <div class="col-md-4">
             <span class="fa-stack fa-4x">
               <i class="fas fa-circle fa-stack-2x text-primary"></i>
               <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
@@ -119,7 +116,6 @@
               harum ex magni, dicta impedit.
             </p>
           </div> -->
-        </div>
       </div>
     </section>
     <!-- <input type="text" v-model="search" placeholder="OR search experiences" /> -->
@@ -364,8 +360,9 @@ export default {
 
 <style>
 .row {
-  gap: 1%;
+  grid-gap: 4%;
   display: inline-flex;
+  justify-content: center;
 }
 img {
   max-width: 300px;
@@ -397,18 +394,22 @@ img {
 }
 #district {
   height: 50px;
+  /* text-align: center; */
 }
 
 #tags {
-  gap: 1%;
-  margin-top: 2%;
-  margin-bottom: 2%;
+  padding-left: 10%;
+}
+
+input {
+  box-shadow: none;
 }
 
 #tag-and-button {
   display: block;
   margin-top: 2%;
   margin-bottom: 5%;
+  text-align: center;
 }
 
 image {
