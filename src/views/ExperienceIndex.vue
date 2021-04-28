@@ -1,14 +1,14 @@
 <template>
   <div class="experience-index">
-    <ul>
+    <!-- <ul>
       <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-    </ul>
+    </ul> -->
     <section class="page-section" id="services">
       <div class="text-center">
-        <h2 class="section-heading text-uppercase">'IKE</h2>
-        <h3 class="section-subheading text-muted">to see, experience, know, and understand</h3>
+        <h1 class="section-heading text-uppercase">...it's a BIG island.</h1>
+        <h3 class="section-subheading">filter experiences by district and category</h3>
       </div>
-      <div class="container">
+      <div class="container-one">
         <div id="district">
           <h2>{{ district }}</h2>
         </div>
@@ -116,57 +116,57 @@
               harum ex magni, dicta impedit.
             </p>
           </div> -->
-      </div>
-    </section>
-    <!-- <input type="text" v-model="search" placeholder="OR search experiences" /> -->
-    <div class="container">
-      <div class="row">
-        <div
-          class="card"
-          style="width: 18rem"
-          id="index"
-          v-for="experience in filterBy(filteredByTag, location)"
-          v-bind:key="experience.id"
-        >
-          <img v-bind:src="experience.image_url" v-bind:alt="experience.name" class="card-img-top" />
-          <div class="card-body">
-            <h4>{{ experience.name }}</h4>
-            <p class="card-text">
-              {{ experience.location }}
-            </p>
-            <button v-on:click="showExperience(experience)">More Info</button>
+        <!-- </div> -->
+        <!-- <input type="text" v-model="search" placeholder="OR search experiences" /> -->
+        <!-- <div class="container-two"> -->
+        <div class="row">
+          <div
+            class="card"
+            style="width: 18rem"
+            id="index"
+            v-for="experience in filterBy(filteredByTag, location)"
+            v-bind:key="experience.id"
+          >
+            <img v-bind:src="experience.image_url" v-bind:alt="experience.name" class="card-img-top" />
+            <div class="card-body">
+              <h4>{{ experience.name }}</h4>
+              <p class="card-text">
+                {{ experience.location }}
+              </p>
+              <button v-on:click="showExperience(experience)">More Info</button>
+            </div>
+            <dialog id="experience-show">
+              <form method="dialog">
+                <h1>Name: {{ currentExperience.name }}</h1>
+                <p>
+                  Location on the Island:
+                  {{ currentExperience.location }}
+                </p>
+                <p>
+                  Description:
+                  {{ currentExperience.description }}
+                </p>
+                <p>
+                  Recommended Length of Stay:
+                  {{ currentExperience.length }}
+                </p>
+                <p>
+                  Important Information:
+                  {{ currentExperience.info }}
+                </p>
+                <div id="pic-container">
+                  <div id="map"></div>
+                  <img v-bind:src="currentExperience.image_url" v-bind:alt="experience.name" />
+                </div>
+                <br />
+                <button>Close</button>
+                <button v-on:click="createListItem()">Add to the list</button>
+              </form>
+            </dialog>
           </div>
-          <dialog id="experience-show">
-            <form method="dialog">
-              <h1>Name: {{ currentExperience.name }}</h1>
-              <p>
-                Location on the Island:
-                {{ currentExperience.location }}
-              </p>
-              <p>
-                Description:
-                {{ currentExperience.description }}
-              </p>
-              <p>
-                Recommended Length of Stay:
-                {{ currentExperience.length }}
-              </p>
-              <p>
-                Important Information:
-                {{ currentExperience.info }}
-              </p>
-              <div id="pic-container">
-                <div id="map"></div>
-                <img v-bind:src="currentExperience.image_url" v-bind:alt="experience.name" />
-              </div>
-              <br />
-              <button>Close</button>
-              <button v-on:click="createListItem()">Add to the list</button>
-            </form>
-          </dialog>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -364,7 +364,18 @@ export default {
   display: inline-flex;
   justify-content: center;
 }
-img {
+.experience-index {
+  background: url("../assets/pineapplewallpaper3.jpg");
+}
+
+.container-one {
+  background-color: white;
+  margin: 0 5% 0 5%;
+  border: 4px solid rgb(254, 207, 52);
+  border-radius: 0.5%;
+}
+
+#image {
   max-width: 300px;
 }
 
@@ -385,6 +396,10 @@ img {
 #experience-show {
   margin-left: 10%;
   margin-right: 10%;
+}
+
+.section-subheading {
+  background: rgb(254, 207, 52);
 }
 
 #pic-container {
@@ -412,7 +427,7 @@ input {
   text-align: center;
 }
 
-image {
+img {
   width: 300px;
 }
 </style>

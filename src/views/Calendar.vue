@@ -1,7 +1,24 @@
 <template>
   <div class="calendar-page">
-    <header class="masthead">
-      <form v-on:submit.prevent="updateUser(user)" v-if="noDates()">
+    <!-- <header class="masthead"> -->
+    <form v-on:submit.prevent="updateUser(user)" v-if="noDates()">
+      <h1>When will you be coming to our island?</h1>
+      <ul>
+        <li class="text-danger" v-for="error in errors" v-bind:key="error">
+          {{ error }}
+        </li>
+      </ul>
+      <label for="example-datepicker">Arrival</label>
+      <b-form-datepicker id="example-datepicker" v-model="inputTripStart" class="mb-2"></b-form-datepicker>
+      <div>
+        <label for="example-datepicker">Departure</label>
+        <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
+      </div>
+      <input type="submit" class="btn btn-primary" value="Submit" />
+    </form>
+
+    <dialog id="edit-dates">
+      <form v-on:submit.prevent="updateUser(user)">
         <h1>When will you be coming to our island?</h1>
         <ul>
           <li class="text-danger" v-for="error in errors" v-bind:key="error">
@@ -17,72 +34,62 @@
           <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
         </div>
         <input type="submit" class="btn btn-primary" value="Submit" />
+        <button>Close</button>
       </form>
+    </dialog>
+    <!-- </div> -->
 
-      <dialog id="edit-dates">
-        <form v-on:submit.prevent="updateUser(user)">
-          <h1>When will you be coming to our island?</h1>
-          <ul>
-            <li class="text-danger" v-for="error in errors" v-bind:key="error">
-              {{ error }}
-            </li>
-          </ul>
-          <div>
-            <label for="example-datepicker">Arrival</label>
-            <b-form-datepicker id="example-datepicker" v-model="inputTripStart" class="mb-2"></b-form-datepicker>
-          </div>
-          <div>
-            <label for="example-datepicker">Departure</label>
-            <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
-          </div>
-          <input type="submit" class="btn btn-primary" value="Submit" />
-          <button>Close</button>
-        </form>
-      </dialog>
-      <!-- </div> -->
-
-      <div class="calendar" v-if="!noDates()">
-        <div class="text-center">
-          <h2 class="section-heading text-uppercase">Your Trip Calendar</h2>
-        </div>
-        <div class="slider">
-          <div class="full hide-scroll">
-            <ul class="hs">
-              <div class="container" v-for="(date, index) in dates" v-bind:key="`vfor-${index}`">
-                <li class="item">
-                  <h1 class="date" ref="date">
-                    {{ date }}
-                  </h1>
-                  <div class="item-container" v-for="list_item in filterByUserAndDate" v-bind:key="list_item.id">
-                    <div class="filter" v-if="list_item.date == date">
-                      <p>Experience: {{ list_item.experience_info.name }}</p>
-
-                      <button v-on:click="destroyListItem(list_item)">Remove Experience</button>
-                      <hr />
-                    </div>
-                  </div>
-                  <div id="buttons">
-                    <router-link to="/experiences">
-                      <button class="button" ref="button" v-on:click="storeDate(date)">Add Experience</button>
-                    </router-link>
-                    <router-link to="/day-show">
-                      <button class="button" ref="button" v-on:click="storeDate(date)">Show Full Day Details</button>
-                    </router-link>
-                  </div>
-                </li>
-              </div>
-            </ul>
-          </div>
-        </div>
-      </div>
+    <div class="calendar" v-if="!noDates()">
       <div class="text-center">
-        <button v-if="!noDates()" v-on:click="editDates()" class="hidden-button">Edit Trip Dates</button>
+        <img id="surf" src="../assets/surf3.png" />
       </div>
-    </header>
+      <div class="slider">
+        <div class="full hide-scroll">
+          <ul class="hs">
+            <div class="container" v-for="(date, index) in dates" v-bind:key="`vfor-${index}`">
+              <li class="item">
+                <h5 class="date" ref="date">
+                  {{ date }}
+                </h5>
+                <div class="item-container" v-for="list_item in filterByUserAndDate" v-bind:key="list_item.id">
+                  <div class="filter" v-if="list_item.date == date">
+                    <p>{{ list_item.experience_info.name }} | {{ list_item.experience_info.location }}</p>
+
+                    <button class="remove-button" v-on:click="destroyListItem(list_item)">Remove</button>
+                    <hr />
+                  </div>
+                </div>
+                <div id="buttons">
+                  <router-link to="/experiences">
+                    <button class="button" ref="button" v-on:click="storeDate(date)">Add Experience</button>
+                  </router-link>
+                  <router-link to="/day-show">
+                    <button class="button" ref="button" v-on:click="storeDate(date)">Show Full Day Details</button>
+                  </router-link>
+                </div>
+              </li>
+            </div>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div id="footer-margin">
+      <button v-if="!noDates()" v-on:click="editDates()" class="btn btn-primary">Edit Trip Dates</button>
+    </div>
   </div>
 </template>
 
 <style>
+.calendar-page {
+  background-image: url("../assets/pineapplewallpaper3.jpg");
+}
+
+#surf {
+  width: 70%;
+  max-width: 700px;
+  margin: 7% auto 5% auto;
+}
+
 :root {
   --gutter: 20px;
 }
@@ -91,9 +98,19 @@
   padding: var(--gutter) 0;
   display: grid;
   grid-gap: var(--gutter) 0;
+  /* grid-template-columns: var(--gutter) 1fr var(--gutter); */
   grid-template-columns: var(--gutter) 1fr var(--gutter);
   align-content: start;
   width: auto;
+  height: auto;
+  /* background: rgb(253, 220, 111); */
+  background: rgb(209, 209, 209, 0.8);
+  border: 4px solid rgb(247, 200, 46);
+  border-radius: 2%;
+  margin-left: 5%;
+  margin-right: 5%;
+  overflow-y: scroll;
+  box-shadow: 1px 1px 4px gray;
 }
 
 .slider > * {
@@ -127,45 +144,43 @@
   margin-bottom: calc(-0.1 * var(--gutter));
 }
 
-.slider {
-  width: auto;
-  height: auto;
-  background: #fafaf9;
-  overflow-y: scroll;
-  margin-left: 10%;
-  margin-right: 10%;
-  border-radius: 2%;
-}
-
 .hs > li,
 .item {
-  scroll-snap-align: center;
+  /* scroll-snap-align: center; */
   padding: calc(var(--gutter) / 2 * 1.5);
-  display: flex;
-  flex-direction: column;
+  list-style-type: none;
+  /* display: flex;
+  flex-direction: column; */
   justify-content: start;
   align-items: center;
-  background-image: url("../assets/carlsmith.jpg");
+  /* background-image: url("../assets/carlsmith.jpg"); */
+  background: white;
+  border: 2px solid rgb(254, 207, 52);
   border-radius: 8px;
   height: auto;
   width: auto;
+  min-width: 300px;
   font-size: 12px;
-  text-shadow: 1px 1px 2px black;
+  /* text-shadow: 1px 1px 2px black; */
+  box-shadow: 1px 1px 4px gray;
 }
 
-.section-heading {
-  margin-bottom: 5%;
-  text-shadow: 1px 1px 2px black, 1px 1px 4px gray;
+h5 {
+  text-align: center;
+  color: black;
+  padding-bottom: 10%;
 }
 
 router-link {
   text-decoration: none;
 }
 
-.hidden-button {
-  margin-top: 2%;
-  margin-left: auto;
-  margin-right: auto;
+.remove-button {
+  color: white;
+  text-shadow: 1px 1px 4px black;
+  background: rgb(254, 207, 52);
+  border: none;
+  box-shadow: 1px 2px 4px gray;
 }
 
 #edit-dates {
@@ -174,6 +189,12 @@ router-link {
 
 #buttons {
   display: flex;
+  gap: 2%;
+}
+
+#footer-margin {
+  text-align: center;
+  padding: 5% 0 5% 0;
 }
 </style>
 

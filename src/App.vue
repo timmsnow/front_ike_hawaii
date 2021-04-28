@@ -2,7 +2,7 @@
   <div id="app">
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top"><img src="assets/img/navbar-logo.svg" alt="" /></a>
+        <!-- <a class="navbar-brand js-scroll-trigger" href="#page-top"><img src="assets/img/navbar-logo.svg" alt="" /></a> -->
         <button
           class="navbar-toggler navbar-toggler-right"
           type="button"
@@ -53,6 +53,7 @@
 <style>
 footer {
   border-top: 2px solid rgb(170, 168, 168);
+  /* background: rgb(254, 207, 52); */
 }
 </style>
 

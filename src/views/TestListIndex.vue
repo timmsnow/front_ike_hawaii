@@ -86,10 +86,6 @@ export default {
   min-width: auto;
 }
 
-.item {
-  min-width: 400px;
-}
-
 .update-button {
   margin-top: 2%;
 }

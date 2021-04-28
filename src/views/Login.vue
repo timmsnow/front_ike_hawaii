@@ -1,21 +1,24 @@
 <template>
   <div class="login">
     <header class="masthead">
-      <div class="masthead-subheading">...it's a BIG island.</div>
-      <form v-on:submit.prevent="submit()">
-        <ul>
-          <li class="text-danger" v-for="error in errors" v-bind:key="error">
-            {{ error }}
-          </li>
-        </ul>
-        <div class="form-group">
-          <input type="email" class="form-control" v-model="email" placeholder="email" />
-        </div>
-        <div class="form-group">
-          <input type="password" class="form-control" v-model="password" placeholder="password" />
-        </div>
-        <input type="submit" class="btn btn-primary" value="Submit" />
-      </form>
+      <div class="welcome">
+        <div class="masthead-subheading">'Ike'</div>
+        <p class="text-muted" style="color: white !important">to see, experience, know, and understand</p>
+        <form v-on:submit.prevent="submit()">
+          <ul>
+            <li class="text-danger" v-for="error in errors" v-bind:key="error">
+              {{ error }}
+            </li>
+          </ul>
+          <div class="form-group">
+            <input type="email" class="form-control" v-model="email" placeholder="email" />
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" v-model="password" placeholder="password" />
+          </div>
+          <input type="submit" class="btn btn-primary" value="Submit" />
+        </form>
+      </div>
     </header>
   </div>
 </template>

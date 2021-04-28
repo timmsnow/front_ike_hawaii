@@ -1,56 +1,58 @@
 <template>
   <div id="day-show">
-    <h1>{{ date }}</h1>
+    <div class="container">
+      <h1>{{ date }}</h1>
 
-    <!-- ---MAP VIEW--- -->
-    <div id="map"></div>
+      <!-- ---MAP VIEW--- -->
+      <div id="map"></div>
 
-    <div class="item-container" v-for="(experience, index) in experiences" v-bind:key="index">
-      <div class="filter">
-        <div id="list-item-container">
-          <div>
-            <h2>{{ experience.name }}</h2>
-            <p>Location: {{ experience.location }}</p>
-            <p>Description: {{ experience.description }}</p>
-            <p>Recommended Length of Time: {{ experience.length }}</p>
-            <p>Best Time to Visit: {{ experience.time }}</p>
-            <p>Important Information: {{ experience.info }}</p>
+      <div class="item-container" v-for="(experience, index) in experiences" v-bind:key="index">
+        <div class="filter">
+          <div id="list-item-container">
+            <div>
+              <h2>{{ experience.name }}</h2>
+              <p>Location: {{ experience.location }}</p>
+              <p>Description: {{ experience.description }}</p>
+              <p>Recommended Length of Time: {{ experience.length }}</p>
+              <p>Best Time to Visit: {{ experience.time }}</p>
+              <p>Important Information: {{ experience.info }}</p>
+            </div>
+            <img v-bind:src="experience.image_url" v-bind:alt="experience.name" />
           </div>
-          <img v-bind:src="experience.image_url" v-bind:alt="experience.name" />
-        </div>
 
-        <!-- <button v-on:click="destroyListItem(experience)">Remove Experience</button> -->
-        <hr />
-        <div v-if="drivingTimes[index] != null">
-          Approximate driving time between {{ experiences[index].name }} and {{ experiences[index + 1].name }} is
-          {{ drivingTimes[index] }} minutes
+          <!-- <button v-on:click="destroyListItem(experience)">Remove Experience</button> -->
           <hr />
+          <div v-if="drivingTimes[index] != null">
+            Approximate driving time between {{ experiences[index].name }} and {{ experiences[index + 1].name }} is
+            {{ drivingTimes[index] }} minutes
+            <hr />
+          </div>
         </div>
       </div>
-    </div>
-    <h2>Time Tracker</h2>
-    <div id="time-tracker">
-      <div id="recommended-time">
-        <h3>How long would you like to stay?</h3>
-        <div v-for="experience in experiences" :key="experience.id">
-          <p>
-            {{ experience.name }}
-            <input type="text" :placeholder="experience.length" />
+      <h2>Time Tracker</h2>
+      <div id="time-tracker">
+        <div id="recommended-time">
+          <h3>How long would you like to stay?</h3>
+          <div v-for="experience in experiences" :key="experience.id">
+            <p>
+              {{ experience.name }}
+              <input type="text" :placeholder="experience.length" />
+            </p>
+          </div>
+        </div>
+        <div id="driving-time">
+          <h3>Approximate Driving Times</h3>
+          <p v-for="(time, index) in drivingTimes" :key="index">
+            Driving time between {{ experiences[index].name }} and {{ experiences[index + 1].name }} is
+            {{ drivingTimes[index] }} minutes
           </p>
         </div>
       </div>
-      <div id="driving-time">
-        <h3>Approximate Driving Times</h3>
-        <p v-for="(time, index) in drivingTimes" :key="index">
-          Driving time between {{ experiences[index].name }} and {{ experiences[index + 1].name }} is
-          {{ drivingTimes[index] }} minutes
-        </p>
-      </div>
+      <h3>Total Time:</h3>
+      <router-link to="/calendar">
+        <button class="button" ref="button" v-on:click="removeDate(date)">Return to Calendar</button>
+      </router-link>
     </div>
-    <h3>Total Time:</h3>
-    <router-link to="/calendar">
-      <button class="button" ref="button" v-on:click="removeDate(date)">Return to Calendar</button>
-    </router-link>
   </div>
 </template>
 
@@ -145,8 +147,11 @@ export default {
 };
 </script>
 
-<style scoped>
-/* delete this styling (temp fix),  */
+<style>
+.day-show {
+  background-image: url("../assets/pineapplewallpaper3.jpg");
+}
+
 .filter {
   margin-left: 10%;
   margin-right: 10%;
