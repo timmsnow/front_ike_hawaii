@@ -1,25 +1,7 @@
 <template>
   <div class="calendar-page">
-    <form v-on:submit.prevent="updateUser(user)" v-if="noDates()">
-      <h1>When will you be coming to our island?</h1>
-      <ul>
-        <li class="text-danger" v-for="error in errors" v-bind:key="error">
-          {{ error }}
-        </li>
-      </ul>
-      <div>
-        <label for="example-datepicker">Arrival</label>
-        <b-form-datepicker id="example-datepicker" v-model="inputTripStart" class="mb-2"></b-form-datepicker>
-      </div>
-      <div>
-        <label for="example-datepicker">Departure</label>
-        <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
-      </div>
-      <input type="submit" class="btn btn-primary" value="Submit" />
-    </form>
-
-    <dialog id="edit-dates">
-      <form v-on:submit.prevent="updateUser(user)">
+    <header class="masthead">
+      <form v-on:submit.prevent="updateUser(user)" v-if="noDates()">
         <h1>When will you be coming to our island?</h1>
         <ul>
           <li class="text-danger" v-for="error in errors" v-bind:key="error">
@@ -35,44 +17,68 @@
           <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
         </div>
         <input type="submit" class="btn btn-primary" value="Submit" />
-        <button>Close</button>
       </form>
-    </dialog>
-    <!-- </div> -->
 
-    <div class="calendar" v-if="!noDates()">
-      <h1>Your Trip Calendar</h1>
-      <div class="slider">
-        <div class="full hide-scroll">
-          <ul class="hs">
-            <div class="container" v-for="(date, index) in dates" v-bind:key="`vfor-${index}`">
-              <li class="item">
-                <h1 class="date" ref="date">
-                  {{ date }}
-                </h1>
-                <div class="item-container" v-for="list_item in filterByUserAndDate" v-bind:key="list_item.id">
-                  <div class="filter" v-if="list_item.date == date">
-                    <p>Experience: {{ list_item.experience_info.name }}</p>
-
-                    <button v-on:click="destroyListItem(list_item)">Remove Experience</button>
-                    <hr />
-                  </div>
-                </div>
-                <div id="buttons">
-                  <router-link to="/experiences">
-                    <button class="button" ref="button" v-on:click="storeDate(date)">Add Experience</button>
-                  </router-link>
-                  <router-link to="/day-show">
-                    <button class="button" ref="button" v-on:click="storeDate(date)">Show Full Day Details</button>
-                  </router-link>
-                </div>
-              </li>
-            </div>
+      <dialog id="edit-dates">
+        <form v-on:submit.prevent="updateUser(user)">
+          <h1>When will you be coming to our island?</h1>
+          <ul>
+            <li class="text-danger" v-for="error in errors" v-bind:key="error">
+              {{ error }}
+            </li>
           </ul>
+          <div>
+            <label for="example-datepicker">Arrival</label>
+            <b-form-datepicker id="example-datepicker" v-model="inputTripStart" class="mb-2"></b-form-datepicker>
+          </div>
+          <div>
+            <label for="example-datepicker">Departure</label>
+            <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
+          </div>
+          <input type="submit" class="btn btn-primary" value="Submit" />
+          <button>Close</button>
+        </form>
+      </dialog>
+      <!-- </div> -->
+
+      <div class="calendar" v-if="!noDates()">
+        <div class="text-center">
+          <h2 class="section-heading text-uppercase">Your Trip Calendar</h2>
+        </div>
+        <div class="slider">
+          <div class="full hide-scroll">
+            <ul class="hs">
+              <div class="container" v-for="(date, index) in dates" v-bind:key="`vfor-${index}`">
+                <li class="item">
+                  <h1 class="date" ref="date">
+                    {{ date }}
+                  </h1>
+                  <div class="item-container" v-for="list_item in filterByUserAndDate" v-bind:key="list_item.id">
+                    <div class="filter" v-if="list_item.date == date">
+                      <p>Experience: {{ list_item.experience_info.name }}</p>
+
+                      <button v-on:click="destroyListItem(list_item)">Remove Experience</button>
+                      <hr />
+                    </div>
+                  </div>
+                  <div id="buttons">
+                    <router-link to="/experiences">
+                      <button class="button" ref="button" v-on:click="storeDate(date)">Add Experience</button>
+                    </router-link>
+                    <router-link to="/day-show">
+                      <button class="button" ref="button" v-on:click="storeDate(date)">Show Full Day Details</button>
+                    </router-link>
+                  </div>
+                </li>
+              </div>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
-    <button v-if="!noDates()" v-on:click="editDates()" class="hidden-button">Edit Trip Dates</button>
+      <div class="text-center">
+        <button v-if="!noDates()" v-on:click="editDates()" class="hidden-button">Edit Trip Dates</button>
+      </div>
+    </header>
   </div>
 </template>
 
@@ -124,10 +130,11 @@
 .slider {
   width: auto;
   height: auto;
-  background: #dbd0bc;
+  background: #fafaf9;
   overflow-y: scroll;
   margin-left: 10%;
   margin-right: 10%;
+  border-radius: 2%;
 }
 
 .hs > li,
@@ -138,11 +145,17 @@
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  background: #fff;
+  background-image: url("../assets/carlsmith.jpg");
   border-radius: 8px;
   height: auto;
   width: auto;
   font-size: 12px;
+  text-shadow: 1px 1px 2px black;
+}
+
+.section-heading {
+  margin-bottom: 5%;
+  text-shadow: 1px 1px 2px black, 1px 1px 4px gray;
 }
 
 router-link {
