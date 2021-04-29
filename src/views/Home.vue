@@ -57,14 +57,7 @@
   border-radius: 5%;
   background: rgb(37, 37, 37, 0.6);
 }
-form {
-  margin-left: 35%;
-  margin-right: 35%;
-}
 
-/* input {
-  box-shadow: 1px 1px 1px black, 1px 1px 1px gray;
-} */
 .buttons {
   width: 40%;
   margin: 5% auto;

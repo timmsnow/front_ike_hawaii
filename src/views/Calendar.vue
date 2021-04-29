@@ -1,41 +1,49 @@
 <template>
   <div class="calendar-page">
     <!-- <header class="masthead"> -->
-    <form v-on:submit.prevent="updateUser(user)" v-if="noDates()">
-      <h1>When will you be coming to our island?</h1>
-      <ul>
-        <li class="text-danger" v-for="error in errors" v-bind:key="error">
-          {{ error }}
-        </li>
-      </ul>
-      <label for="example-datepicker">Arrival</label>
-      <b-form-datepicker id="example-datepicker" v-model="inputTripStart" class="mb-2"></b-form-datepicker>
-      <div>
-        <label for="example-datepicker">Departure</label>
-        <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
-      </div>
-      <input type="submit" class="btn btn-primary" value="Submit" />
-    </form>
-
-    <dialog id="edit-dates">
-      <form v-on:submit.prevent="updateUser(user)">
-        <h1>When will you be coming to our island?</h1>
-        <ul>
-          <li class="text-danger" v-for="error in errors" v-bind:key="error">
-            {{ error }}
-          </li>
-        </ul>
-        <div>
+    <div class="page-section">
+      <div class="dates">
+        <form class="container" v-on:submit.prevent="updateUser(user)" v-if="noDates()">
+          <h1 class="text-center">When will you be coming to our island?</h1>
+          <ul>
+            <li class="text-danger" v-for="error in errors" v-bind:key="error">
+              {{ error }}
+            </li>
+          </ul>
           <label for="example-datepicker">Arrival</label>
           <b-form-datepicker id="example-datepicker" v-model="inputTripStart" class="mb-2"></b-form-datepicker>
-        </div>
-        <div>
-          <label for="example-datepicker">Departure</label>
-          <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
-        </div>
-        <input type="submit" class="btn btn-primary" value="Submit" />
-        <button>Close</button>
-      </form>
+          <div>
+            <label for="example-datepicker">Departure</label>
+            <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
+          </div>
+          <input type="submit" class="btn btn-primary" value="Submit" />
+        </form>
+      </div>
+    </div>
+
+    <dialog>
+      <div class="container">
+        <form v-on:submit.prevent="updateUser(user)" class="edit-dates">
+          <h1>When will you be coming to our island?</h1>
+          <ul>
+            <li class="text-danger" v-for="error in errors" v-bind:key="error">
+              {{ error }}
+            </li>
+          </ul>
+          <div>
+            <label for="example-datepicker">Arrival</label>
+            <b-form-datepicker id="example-datepicker" v-model="inputTripStart" class="mb-2"></b-form-datepicker>
+          </div>
+          <div>
+            <label for="example-datepicker">Departure</label>
+            <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
+          </div>
+          <div id="buttons">
+            <input type="submit" class="btn btn-primary" value="Submit" />
+            <button class="btn btn-primary">Close</button>
+          </div>
+        </form>
+      </div>
     </dialog>
     <!-- </div> -->
 
@@ -184,12 +192,25 @@ router-link {
 }
 
 #edit-dates {
-  padding: 10%;
+  padding: 10% 5% 10% 5%;
+}
+
+.dates {
+  margin: 5% 20% 0 20%;
+  background-color: rgba(254, 207, 52, 0.7);
+  border-radius: 2%;
+  padding: 5%;
+}
+
+.b-calendar-grid {
+  padding-left: 22%;
+  padding-right: 22%;
 }
 
 #buttons {
   display: flex;
   gap: 2%;
+  justify-content: center;
 }
 
 #footer-margin {

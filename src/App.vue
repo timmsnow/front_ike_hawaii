@@ -51,9 +51,30 @@
 </template>
 
 <style>
+li {
+  list-style: none;
+}
+
+#example-datepicker__dialog_ {
+  padding: 2%;
+  box-shadow: 1px 1px 4px gray;
+}
+.b-calendar-grid {
+  padding: 0 20% !important;
+  text-shadow: none;
+}
+
 footer {
   border-top: 2px solid rgb(170, 168, 168);
   /* background: rgb(254, 207, 52); */
+}
+
+#example-datepicker__value_ {
+  color: rgb(224, 222, 222) !important;
+}
+
+#example-datepicker-2__value_ {
+  color: rgb(224, 222, 222) !important;
 }
 </style>
 
