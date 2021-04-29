@@ -5,9 +5,11 @@
         <div class="masthead-subheading">Welcome to</div>
         <div class="masthead-heading text-uppercase">'Ike Hawaii</div>
         <div class="buttons">
-          <button v-if="x === ''" class="form" v-on:click="showForm()">get started</button>
-          <p v-if="x === ''">OR</p>
-          <a href="/login"><button v-if="x === ''" class="form">log in</button></a>
+          <button v-if="x === ''" v-on:click="showForm()">GET STARTED</button>
+          <br />
+          <br />
+          <p v-if="x === ''" class="text-white">OR</p>
+          <a href="/login"><button v-if="x === ''" style="font-style: italic">Log In</button></a>
         </div>
         <form id="myDIV" v-on:submit.prevent="submit()" v-if="x === 'x'">
           <ul>
@@ -38,7 +40,7 @@
           </div>
           <input
             type="submit"
-            class="btn btn-primary"
+            class="solo-button"
             style="background-color: rgb(248, 212, 52) !important"
             value="Sign Up"
           />
@@ -48,45 +50,7 @@
   </div>
 </template>
 
-<style>
-.welcome {
-  width: 60%;
-  border: 4px solid #fed136;
-  padding: 5rem 0 5rem 0;
-  margin: 0 auto;
-  border-radius: 5%;
-  background: rgb(37, 37, 37, 0.6);
-}
-
-.buttons {
-  width: 40%;
-  margin: 5% auto;
-}
-.form {
-  border: 2px solid white;
-  border-radius: 5%;
-  color: white;
-  text-shadow: 1px 1px 2px black;
-  background-color: rgb(254, 207, 52);
-  box-shadow: 2px 2px 2px black, 1px 1px 2px gray;
-  margin: 2%;
-  font-size: 1rem;
-}
-
-.masthead-heading {
-  text-shadow: 1px 1px 1px black, 1px 2px 4px gray;
-}
-.masthead-subheading {
-  text-shadow: 1px 1px 1px black, 1px 2px 4px gray;
-}
-
-/* p {
-  font-style: italic;
-  font-family: "Droid Serif", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  text-shadow: 1px 1px 3px gray;
-} */
-</style>
+<style></style>
 
 <script>
 import axios from "axios";

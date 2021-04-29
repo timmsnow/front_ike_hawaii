@@ -1,56 +1,77 @@
 <template>
-  <div id="day-show">
+  <div class="day-show">
     <div class="container">
-      <h1>{{ date }}</h1>
-
-      <!-- ---MAP VIEW--- -->
-      <div id="map"></div>
-
+      <div class="top-padding">
+        <div id="oval">
+          <h1>{{ date }}</h1>
+        </div>
+      </div>
       <div class="item-container" v-for="(experience, index) in experiences" v-bind:key="index">
         <div class="filter">
           <div id="list-item-container">
             <div>
               <h2>{{ experience.name }}</h2>
-              <p>Location: {{ experience.location }}</p>
-              <p>Description: {{ experience.description }}</p>
-              <p>Recommended Length of Time: {{ experience.length }}</p>
-              <p>Best Time to Visit: {{ experience.time }}</p>
-              <p>Important Information: {{ experience.info }}</p>
+              <img v-bind:src="experience.image_url" v-bind:alt="experience.name" class="TextWrap" />
+              <p>
+                Where?
+                <br />
+                <span style="font-weight: bold">{{ experience.location }} District</span>
+              </p>
+              <p>
+                How Long?
+                <br />
+                <span style="font-weight: bold">{{ experience.length }}</span>
+              </p>
+              <p>
+                Best Time to Visit?
+                <br />
+                <span style="font-weight: bold">{{ experience.time }}</span>
+              </p>
+              <p>
+                Important Information:
+                <br />
+                <span style="font-weight: bold">{{ experience.info }}</span>
+              </p>
+              <p>
+                <span style="font-weight: bold">{{ experience.description }}</span>
+              </p>
             </div>
-            <img v-bind:src="experience.image_url" v-bind:alt="experience.name" />
           </div>
 
           <!-- <button v-on:click="destroyListItem(experience)">Remove Experience</button> -->
           <hr />
-          <div v-if="drivingTimes[index] != null">
+          <div v-if="drivingTimes[index] != null" class="text">
             Approximate driving time between {{ experiences[index].name }} and {{ experiences[index + 1].name }} is
             {{ drivingTimes[index] }} minutes
             <hr />
           </div>
         </div>
       </div>
-      <h2>Time Tracker</h2>
-      <div id="time-tracker">
-        <div id="recommended-time">
-          <h3>How long would you like to stay?</h3>
-          <div v-for="experience in experiences" :key="experience.id">
-            <p>
-              {{ experience.name }}
+      <div class="time-tracker-container">
+        <h2>Time Tracker</h2>
+        <div id="map"></div>
+        <div class="time-tracker">
+          <div id="time">
+            <h3>How long would you like to stay?</h3>
+            <div v-for="experience in experiences" :key="experience.id">
+              <label>
+                {{ experience.name }}
+              </label>
               <input type="text" :placeholder="experience.length" />
+            </div>
+          </div>
+          <div id="time">
+            <h3>Approximate Driving Times</h3>
+            <p v-for="(time, index) in drivingTimes" :key="index">
+              Driving time between {{ experiences[index].name }} and {{ experiences[index + 1].name }} is
+              {{ drivingTimes[index] }} minutes
             </p>
           </div>
         </div>
-        <div id="driving-time">
-          <h3>Approximate Driving Times</h3>
-          <p v-for="(time, index) in drivingTimes" :key="index">
-            Driving time between {{ experiences[index].name }} and {{ experiences[index + 1].name }} is
-            {{ drivingTimes[index] }} minutes
-          </p>
-        </div>
+        <h3>Total Time:</h3>
       </div>
-      <h3>Total Time:</h3>
       <router-link to="/calendar">
-        <button class="button" ref="button" v-on:click="removeDate(date)">Return to Calendar</button>
+        <button ref="button" v-on:click="removeDate(date)">Return to Calendar</button>
       </router-link>
     </div>
   </div>
@@ -147,34 +168,87 @@ export default {
 };
 </script>
 
-<style>
-.day-show {
-  background-image: url("../assets/pineapplewallpaper3.jpg");
+<style scoped>
+h1 {
+  color: rgb(254, 207, 52);
+  text-shadow: 1px 0px 2px black;
+  text-align: center;
 }
 
-.filter {
-  margin-left: 10%;
-  margin-right: 10%;
+h2 {
+  text-align: center;
+  padding: 5% 0;
+}
+h3 {
+  text-align: center;
+  padding: 5% 0;
+}
+
+p {
+  color: gray;
+}
+
+#oval {
+  width: 40%;
+  height: auto;
+  background: #fff;
+  border-radius: 300px / 150px;
+  box-shadow: 1px 1px 4px gray;
+  margin-left: auto;
+  margin-right: auto;
+}
+.TextWrap {
+  float: right;
+  margin: 2%;
+}
+
+.day-show {
+  background-image: url("../assets/pineapplewallpaper3.jpg");
+  padding-bottom: 10%;
+  padding-top: 10%;
 }
 
 #list-item-container {
-  display: flex;
-  gap: 2%;
   justify-content: center;
-  margin-top: 5%;
+  margin: 5%;
+  background: white;
+  padding: 5%;
+  box-shadow: 1px 1px 4px gray;
+  height: auto;
+}
+
+.text {
+  font-size: 0.8rem;
+  color: rgb(145, 144, 144);
+  text-align: center;
+  background: rgb(255, 255, 255);
+  box-shadow: 1px 1px 4px gray;
+  margin-left: 5%;
+  margin-right: 5%;
+  font-style: italic;
+  padding-top: 2%;
+}
+
+.time-tracker-container {
+  background: white;
+  margin-left: 5%;
+  margin-right: 5%;
+  box-shadow: 1px 1px 4px gray;
   margin-bottom: 2%;
 }
 
-#time-tracker {
+.time-tracker {
   display: flex;
   gap: 5%;
-  margin-left: 5%;
-  margin-right: 5%;
+}
+
+#time {
+  padding: 2%;
 }
 
 #map {
-  margin-left: auto;
-  margin-right: auto;
+  margin: 10% auto;
   justify-content: center;
+  box-shadow: 1px 1px 4px gray;
 }
 </style>

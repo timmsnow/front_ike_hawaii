@@ -5,7 +5,7 @@
     </ul> -->
     <section class="page-section" id="services">
       <div class="text-center">
-        <h1 class="section-heading text-uppercase">...it's a BIG island.</h1>
+        <h1 class="section-heading text-uppercase" id="it-is-big">...it's a BIG island.</h1>
         <h3 class="section-subheading">filter experiences by district and category</h3>
       </div>
       <div class="container-one">
@@ -138,6 +138,10 @@
             <dialog id="experience-show">
               <form method="dialog">
                 <h1>Name: {{ currentExperience.name }}</h1>
+                <div id="pic-container">
+                  <img class="image-container" v-bind:src="currentExperience.image_url" v-bind:alt="experience.name" />
+                  <div id="map"></div>
+                </div>
                 <p>
                   Location on the Island:
                   {{ currentExperience.location }}
@@ -154,10 +158,6 @@
                   Important Information:
                   {{ currentExperience.info }}
                 </p>
-                <div id="pic-container">
-                  <div id="map"></div>
-                  <img v-bind:src="currentExperience.image_url" v-bind:alt="experience.name" />
-                </div>
                 <br />
                 <button>Close</button>
                 <button v-on:click="createListItem()">Add to the list</button>
@@ -358,76 +358,25 @@ export default {
 };
 </script>
 
-<style>
-.row {
-  grid-gap: 4%;
-  display: inline-flex;
-  justify-content: center;
+<style scoped>
+h1 {
+  text-align: center;
+  margin: 5% auto;
+}
+dialog {
+  border: 3px solid rgb(254, 207, 52);
+  padding: 2%;
 }
 .experience-index {
   background: url("../assets/pineapplewallpaper3.jpg");
 }
 
-.container-one {
-  background-color: white;
-  margin: 0 5% 0 5%;
-  border: 4px solid rgb(254, 207, 52);
-  border-radius: 0.5%;
-}
-
-#image {
-  max-width: 300px;
-}
-
-.card {
-  box-shadow: 1px 2px 5px gray;
-  margin-bottom: 2%;
-}
-
-.card h4 {
-  text-align: center;
-}
-
 #map {
-  height: 300px;
-  width: 300px;
+  box-shadow: 1px 1px 4px gray;
 }
 
-#experience-show {
-  margin-left: 10%;
-  margin-right: 10%;
-}
-
-.section-subheading {
-  background: rgb(254, 207, 52);
-}
-
-#pic-container {
-  display: flex;
-  gap: 2%;
-  justify-content: center;
-}
-#district {
-  height: 50px;
-  /* text-align: center; */
-}
-
-#tags {
-  padding-left: 10%;
-}
-
-input {
-  box-shadow: none;
-}
-
-#tag-and-button {
-  display: block;
-  margin-top: 2%;
-  margin-bottom: 5%;
-  text-align: center;
-}
-
-img {
-  width: 300px;
+.image-container {
+  margin-right: 1%;
+  box-shadow: 1px 1px 4px gray;
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
   <div class="calendar-page">
     <!-- <header class="masthead"> -->
-    <div class="page-section">
-      <div class="dates">
-        <form class="container" v-on:submit.prevent="updateUser(user)" v-if="noDates()">
+    <div class="dates" v-if="noDates()">
+      <div class="page-section">
+        <form class="container" v-on:submit.prevent="updateUser(user)">
           <h1 class="text-center">When will you be coming to our island?</h1>
           <ul>
             <li class="text-danger" v-for="error in errors" v-bind:key="error">
@@ -16,14 +16,14 @@
             <label for="example-datepicker">Departure</label>
             <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
           </div>
-          <input type="submit" class="btn btn-primary" value="Submit" />
+          <input type="submit" class="solo-button" value="Submit" />
         </form>
       </div>
     </div>
 
-    <dialog>
+    <dialog class="edit-dates">
       <div class="container">
-        <form v-on:submit.prevent="updateUser(user)" class="edit-dates">
+        <form v-on:submit.prevent="updateUser(user)">
           <h1>When will you be coming to our island?</h1>
           <ul>
             <li class="text-danger" v-for="error in errors" v-bind:key="error">
@@ -39,8 +39,8 @@
             <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
           </div>
           <div id="buttons">
-            <input type="submit" class="btn btn-primary" value="Submit" />
-            <button class="btn btn-primary">Close</button>
+            <input type="submit" class="solo-button" value="Submit" />
+            <button class="remove-button">Close</button>
           </div>
         </form>
       </div>
@@ -59,20 +59,26 @@
                 <h5 class="date" ref="date">
                   {{ date }}
                 </h5>
-                <div class="item-container" v-for="list_item in filterByUserAndDate" v-bind:key="list_item.id">
-                  <div class="filter" v-if="list_item.date == date">
-                    <p>{{ list_item.experience_info.name }} | {{ list_item.experience_info.location }}</p>
+                <div class="box">
+                  <div class="item-container" v-for="list_item in filterByUserAndDate" v-bind:key="list_item.id">
+                    <div class="filter" v-if="list_item.date == date">
+                      <div class="flex">
+                        <p>{{ list_item.experience_info.name }} | {{ list_item.experience_info.location }}</p>
 
-                    <button class="remove-button" v-on:click="destroyListItem(list_item)">Remove</button>
-                    <hr />
+                        <button v-on:click="destroyListItem(list_item)">Remove</button>
+                      </div>
+                      <hr />
+                    </div>
                   </div>
                 </div>
                 <div id="buttons">
                   <router-link to="/experiences">
-                    <button class="button" ref="button" v-on:click="storeDate(date)">Add Experience</button>
+                    <button class="remove-button" ref="button" v-on:click="storeDate(date)">Add Experience</button>
                   </router-link>
                   <router-link to="/day-show">
-                    <button class="button" ref="button" v-on:click="storeDate(date)">Show Full Day Details</button>
+                    <button class="remove-button" ref="button" v-on:click="storeDate(date)">
+                      Show Full Day Details
+                    </button>
                   </router-link>
                 </div>
               </li>
@@ -82,12 +88,12 @@
       </div>
     </div>
     <div id="footer-margin">
-      <button v-if="!noDates()" v-on:click="editDates()" class="btn btn-primary">Edit Trip Dates</button>
+      <button v-if="!noDates()" v-on:click="editDates()" class="solo-button">Edit Trip Dates</button>
     </div>
   </div>
 </template>
 
-<style>
+<style scoped>
 .calendar-page {
   background-image: url("../assets/pineapplewallpaper3.jpg");
 }
@@ -155,13 +161,12 @@
 .hs > li,
 .item {
   /* scroll-snap-align: center; */
-  padding: calc(var(--gutter) / 2 * 1.5);
+  /* padding: calc(var(--gutter) / 2 * 1.5); */
+  margin: 2%;
+  padding: 3%;
   list-style-type: none;
-  /* display: flex;
-  flex-direction: column; */
   justify-content: start;
   align-items: center;
-  /* background-image: url("../assets/carlsmith.jpg"); */
   background: white;
   border: 2px solid rgb(254, 207, 52);
   border-radius: 8px;
@@ -169,53 +174,22 @@
   width: auto;
   min-width: 300px;
   font-size: 12px;
-  /* text-shadow: 1px 1px 2px black; */
   box-shadow: 1px 1px 4px gray;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+.flex button {
+  margin: 2% auto;
 }
 
 h5 {
   text-align: center;
   color: black;
   padding-bottom: 10%;
-}
-
-router-link {
-  text-decoration: none;
-}
-
-.remove-button {
-  color: white;
-  text-shadow: 1px 1px 4px black;
-  background: rgb(254, 207, 52);
-  border: none;
-  box-shadow: 1px 2px 4px gray;
-}
-
-#edit-dates {
-  padding: 10% 5% 10% 5%;
-}
-
-.dates {
-  margin: 5% 20% 0 20%;
-  background-color: rgba(254, 207, 52, 0.7);
-  border-radius: 2%;
-  padding: 5%;
-}
-
-.b-calendar-grid {
-  padding-left: 22%;
-  padding-right: 22%;
-}
-
-#buttons {
-  display: flex;
-  gap: 2%;
-  justify-content: center;
-}
-
-#footer-margin {
-  text-align: center;
-  padding: 5% 0 5% 0;
 }
 </style>
 
@@ -287,7 +261,7 @@ export default {
       if (
         confirm("Are you sure? Changing dates can result in deleted experiences if original dates arent included...")
       ) {
-        document.querySelector("#edit-dates").showModal();
+        document.querySelector(".edit-dates").showModal();
       }
     },
     storeDate: function (date) {
