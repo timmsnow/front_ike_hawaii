@@ -52,13 +52,27 @@
         <div id="map"></div>
         <div class="time-tracker">
           <div id="time">
+            <form v-on:submit.prevent="getCoordinates(string)">
+              <label>enter your starting address</label>
+              <input type="text" placeholder="Hotel Address?" />
+              <input type="submit" class="btn-primary" />
+            </form>
+            {{ hotel_coordinates }}
+
+            <label>enter your ending address</label>
+            <input type="text" placeholder="Hotel Address?" />
             <h3>How long would you like to stay?</h3>
+            <!-- <form v-on:submit.prevent="storeTimes(times)"> -->
             <div v-for="experience in experiences" :key="experience.id">
-              <label>
+              <label class="time-label">
                 {{ experience.name }}
+                <br />
+                <span style="font-style: italic">(recommended: {{ experience.length }})</span>
               </label>
-              <input type="text" :placeholder="experience.length" />
+              <input type="text" placeholder="hours/minutes" />
             </div>
+            <input type="submit" class="btn-primary" />
+            <!-- </form> -->
           </div>
           <div id="time">
             <h3>Approximate Driving Times</h3>
@@ -94,6 +108,9 @@ export default {
       durations: [],
       drivingTimes: [],
       index: 0,
+      hotel_coordinates: [],
+      input_times: [],
+      string: localStorage.getItem("address"),
     };
   },
   created: function () {
@@ -164,6 +181,28 @@ export default {
           });
       }
     },
+    getCoordinates: function () {
+      var string = "11-3815 5th St Volcano Hi 96785";
+      var url = encodeURIComponent(string);
+      // console.log(hotel_coordinates);
+      axios
+        .get(
+          "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
+            `${url}` +
+            ".json" +
+            "?access_token=" +
+            `${mapboxgl.accessToken}` +
+            "&limit=1"
+        )
+        .then((response) => {
+          this.hotel_coordinates.push(response.data);
+        });
+      var parsedyourElement = JSON.parse(JSON.stringify(this.hotel_coordinates));
+      console.log(parsedyourElement);
+      return this.hotel_coordinates;
+      // console.log(url);
+      // console.log(this.hotel_coordinates);
+    },
   },
 };
 </script>
@@ -186,6 +225,13 @@ h3 {
 
 p {
   color: gray;
+}
+
+input[type="submit"] {
+  display: block;
+  margin-top: 8%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #oval {
@@ -250,5 +296,9 @@ p {
   margin: 10% auto;
   justify-content: center;
   box-shadow: 1px 1px 4px gray;
+}
+
+.time-label {
+  margin-top: 10%;
 }
 </style>

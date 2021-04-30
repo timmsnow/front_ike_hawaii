@@ -298,7 +298,6 @@ export default {
           this.destroyListItem(i);
         }
       }
-      console.log(userListItems);
     },
   },
 };
