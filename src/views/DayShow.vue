@@ -71,7 +71,7 @@
         <h3>Total Time:</h3>
       </div>
       <router-link to="/calendar">
-        <button ref="button" v-on:click="removeDate(date)">Return to Calendar</button>
+        <button ref="button" class="bg-info" v-on:click="removeDate(date)">Return to Calendar</button>
       </router-link>
     </div>
   </div>

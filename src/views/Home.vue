@@ -4,12 +4,12 @@
       <div class="welcome">
         <div class="masthead-subheading">Welcome to</div>
         <div class="masthead-heading text-uppercase">'Ike Hawaii</div>
-        <div class="buttons">
-          <button v-if="x === ''" v-on:click="showForm()">GET STARTED</button>
+        <div class="inline">
+          <button class="bg-primary" v-if="x === ''" v-on:click="showForm()">GET STARTED</button>
           <br />
           <br />
           <p v-if="x === ''" class="text-white">OR</p>
-          <a href="/login"><button v-if="x === ''" style="font-style: italic">Log In</button></a>
+          <a href="/login"><button class="bg-primary" v-if="x === ''" style="font-style: italic">LOG IN</button></a>
         </div>
         <form id="myDIV" v-on:submit.prevent="submit()" v-if="x === 'x'">
           <ul>
@@ -40,7 +40,7 @@
           </div>
           <input
             type="submit"
-            class="solo-button"
+            class="btn-primary"
             style="background-color: rgb(248, 212, 52) !important"
             value="Sign Up"
           />

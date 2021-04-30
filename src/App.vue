@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+      <!-- <nav class="navbar navbar-expand-lg navbar-dark" id="mainNav"> -->
       <div class="container">
         <!-- <a class="navbar-brand js-scroll-trigger" href="#page-top"><img src="assets/img/navbar-logo.svg" alt="" /></a> -->
         <button
@@ -68,10 +69,6 @@ router-link {
   text-decoration: none;
 }
 
-input {
-  box-shadow: none;
-}
-
 #example-datepicker__dialog_ {
   padding: 2%;
   box-shadow: 1px 1px 4px gray;
@@ -109,27 +106,6 @@ input {
   color: rgb(224, 222, 222) !important;
 }
 
-.remove-button {
-  color: white;
-  background: rgb(16, 160, 243);
-  border: 1px solid gray;
-  padding: 5px;
-  box-shadow: 1px 2px 4px gray;
-  margin: auto;
-}
-
-.solo-button {
-  border-radius: 2%;
-  color: white;
-  text-shadow: 1px 1px 2px black, 1px 1px 5px gray;
-  background: rgb(254, 207, 52);
-  border: 1px solid gray;
-  padding: 7px;
-  box-shadow: 1px 2px 4px gray;
-  margin: 3% auto;
-  font-size: 1.5rem;
-}
-
 #edit-dates {
   padding: 10% 5% 10% 5%;
 }
@@ -158,11 +134,6 @@ p {
   padding-right: 22%;
 }
 
-.buttons {
-  width: 40%;
-  margin: 5% auto;
-}
-
 #buttons {
   display: flex;
   gap: 2%;
@@ -170,6 +141,16 @@ p {
   margin: 5% 0;
 }
 
+.buttons {
+  display: flex;
+  gap: 2%;
+  justify-content: center;
+}
+
+div.inline {
+  float: center;
+  margin: 2%;
+}
 #footer-margin {
   text-align: center;
   padding: 5% 0 5% 0;
@@ -220,15 +201,14 @@ p {
 }
 
 #district {
-  height: 50px;
+  padding-top: 2%;
 }
 
 #tags {
   padding-left: 10%;
 }
 
-#tag-and-button {
-  display: block;
+#tag-display {
   margin-top: 2%;
   margin-bottom: 5%;
   text-align: center;

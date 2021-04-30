@@ -16,7 +16,7 @@
           <div class="form-group">
             <input type="password" class="form-control" v-model="password" placeholder="password" />
           </div>
-          <input type="submit" class="solo-button" value="Submit" />
+          <input type="submit" class="btn-primary" value="Submit" />
         </form>
       </div>
     </header>

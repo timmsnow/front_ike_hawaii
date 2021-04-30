@@ -38,9 +38,13 @@
             <label for="example-datepicker">Departure</label>
             <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
           </div>
-          <div id="buttons">
-            <input type="submit" class="solo-button" value="Submit" />
-            <button class="remove-button">Close</button>
+          <div class="buttons">
+            <div class="inline">
+              <input type="submit" class="btn-primary" value="Submit" />
+            </div>
+            <div class="inline">
+              <button class="btn-primary">Close</button>
+            </div>
           </div>
         </form>
       </div>
@@ -65,7 +69,7 @@
                       <div class="flex">
                         <p>{{ list_item.experience_info.name }} | {{ list_item.experience_info.location }}</p>
 
-                        <button v-on:click="destroyListItem(list_item)">Remove</button>
+                        <button class="bg-info" v-on:click="destroyListItem(list_item)">Remove</button>
                       </div>
                       <hr />
                     </div>
@@ -73,12 +77,10 @@
                 </div>
                 <div id="buttons">
                   <router-link to="/experiences">
-                    <button class="remove-button" ref="button" v-on:click="storeDate(date)">Add Experience</button>
+                    <button class="bg-primary" ref="button" v-on:click="storeDate(date)">Add Experience</button>
                   </router-link>
                   <router-link to="/day-show">
-                    <button class="remove-button" ref="button" v-on:click="storeDate(date)">
-                      Show Full Day Details
-                    </button>
+                    <button class="bg-primary" ref="button" v-on:click="storeDate(date)">Show Full Day Details</button>
                   </router-link>
                 </div>
               </li>
@@ -88,12 +90,18 @@
       </div>
     </div>
     <div id="footer-margin">
-      <button v-if="!noDates()" v-on:click="editDates()" class="solo-button">Edit Trip Dates</button>
+      <button v-if="!noDates()" v-on:click="editDates()" class="bg-info">Edit Trip Dates</button>
     </div>
   </div>
 </template>
 
 <style scoped>
+dialog {
+  border: 3px solid rgb(21, 102, 252);
+  border-radius: 1%;
+  padding: 8%;
+}
+
 .calendar-page {
   background-image: url("../assets/pineapplewallpaper3.jpg");
 }
