@@ -176,7 +176,7 @@ p {
 }
 .row {
   grid-gap: 4%;
-  display: inline-flex;
+  display: flex;
   justify-content: center;
 }
 

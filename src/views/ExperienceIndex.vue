@@ -20,23 +20,23 @@
                 target=""
                 id="hamakua"
                 shape="poly"
-                coords="coords=“95,33,116,48,176,68,159,99,141,112,122,177,108,162,91,150,107,130,111,106,107,102,120,86,119,61,113,56,102,55,103,46,93,44,94,41”"
+                coords="“93,32,116,48,176,68,159,99,141,112,122,177,108,162,88,144,106,125,107,107,111,108,107,102,118,86,112,59,103,60,99,55,101,50,90,46”"
                 @mouseover="hamakuaImage()"
                 @mouseout="hawaiiImage()"
                 v-on:click="filterByHamakua()"
                 alt="hamakua"
-                href="#"
+                href="#district"
               />
               <area
                 target=""
                 id="kohala"
                 shape="poly"
-                coords="“53,16,63,15,77,19,86,25,92,32,90,46,101,50,99,55,103,59,112,59,117,64,118,86,105,102,108,107,107,111,106,125,88,144,86,132,64,102,51,94,61,80,65,79,66,68,52,47,50,24,”"
+                coords="“53,16,63,15,77,19,86,25,92,32,90,46,101,50,99,55,103,60,112,59,118,86,105,102,108,107,107,111,106,125,88,144,86,132,64,102,51,94,61,80,65,79,66,68,52,47,50,24”"
                 @mouseover="kohalaImage()"
                 @mouseout="hawaiiImage()"
                 v-on:click="filterByKohala()"
                 alt="kohala"
-                href="#"
+                href="#district"
               />
               <area
                 target=""
@@ -48,7 +48,7 @@
                 v-on:click="filterByHilo()"
                 alt="hilo"
                 value="hilo"
-                href="#"
+                href="#district"
               />
               <area
                 target=""
@@ -59,7 +59,7 @@
                 @mouseout="hawaiiImage()"
                 v-on:click="filterByPuna()"
                 alt="puna"
-                href="#"
+                href="#district"
               />
               <area
                 target=""
@@ -70,7 +70,7 @@
                 @mouseout="hawaiiImage()"
                 v-on:click="filterByKau()"
                 alt="Kau"
-                href="#"
+                href="#district"
               />
               <area
                 target=""
@@ -81,7 +81,7 @@
                 @mouseout="hawaiiImage()"
                 v-on:click="filterByKona()"
                 alt="kona"
-                href="#"
+                href="#district"
               />
             </map>
           </div>
