@@ -91,6 +91,7 @@
     </div>
     <div id="footer-margin">
       <button v-if="!noDates()" v-on:click="editDates()" class="bg-info">Edit Trip Dates</button>
+      {{ userListItems }}
     </div>
   </div>
 </template>
@@ -217,6 +218,7 @@ export default {
       dates: [],
       list_item: {},
       selectedListItem: {},
+      userListItems: [],
     };
   },
   created: function () {
@@ -259,6 +261,7 @@ export default {
       console.log(this.user);
       axios.patch("/api/users/" + this.user_id, params).catch((error) => console.log(error.response));
       this.$router.go();
+      this.trashOldListItems();
     },
     noDates: function () {
       if (this.user.trip_start === null) {
@@ -285,6 +288,17 @@ export default {
         console.log("destroyed!");
         this.$router.go();
       });
+    },
+    trashOldListItems: function () {
+      var userListItems = this.list_items.filter((list_item) => list_item.user_id == this.user_id);
+      for (let i of userListItems) {
+        if (this.dates.includes(i.date)) {
+          console.log(i);
+        } else {
+          this.destroyListItem(i);
+        }
+      }
+      console.log(userListItems);
     },
   },
 };
