@@ -108,6 +108,7 @@ export default {
       durations: [],
       drivingTimes: [],
       index: 0,
+      hotel_coords: [],
       hotel_coordinates: [],
       input_times: [],
       string: localStorage.getItem("address"),
@@ -195,10 +196,11 @@ export default {
             "&limit=1"
         )
         .then((response) => {
-          this.hotel_coordinates.push(response.data);
+          this.hotel_coords.push(response.data);
         });
-      var parsedyourElement = JSON.parse(JSON.stringify(this.hotel_coordinates));
-      console.log(parsedyourElement);
+      // var parsedyourElement = JSON.parse(JSON.stringify(this.hotel_coordinates));
+      // console.log(parsedyourElement);
+      this.hotel_coordinates = this.hotel_coords[0].features[0].center;
       return this.hotel_coordinates;
       // console.log(url);
       // console.log(this.hotel_coordinates);
