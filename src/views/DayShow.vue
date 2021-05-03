@@ -52,17 +52,16 @@
         <div id="map"></div>
         <div class="time-tracker">
           <div id="time">
-            <form v-on:submit.prevent="getCoordinates(string)">
-              <label>enter your starting address</label>
-              <input type="text" placeholder="Hotel Address?" />
+            <form v-on:submit.prevent="updateUser()">
+              <label>Where are you waking up?</label>
+              <input type="text" placeholder="Hotel Address?" v-model="hotel_start" />
+              <label>Where are you sleeping?</label>
+              <button v-on:click.prevent="autoPopulateHotel()">Same place?</button>
+              <input type="text" placeholder="Hotel Address?" v-model="hotel_end" />
               <input type="submit" class="btn-primary" />
             </form>
-            {{ hotel_coordinates }}
-
-            <label>enter your ending address</label>
-            <input type="text" placeholder="Hotel Address?" />
-            <h3>How long would you like to stay?</h3>
-            <!-- <form v-on:submit.prevent="storeTimes(times)"> -->
+            <!-- <h3>How long would you like to stay?</h3>
+            <form v-on:submit.prevent="storeTimes(times)">
             <div v-for="experience in experiences" :key="experience.id">
               <label class="time-label">
                 {{ experience.name }}
@@ -72,13 +71,21 @@
               <input type="text" placeholder="hours/minutes" />
             </div>
             <input type="submit" class="btn-primary" />
-            <!-- </form> -->
+            </form> -->
           </div>
           <div id="time">
             <h3>Approximate Driving Times</h3>
+            <p v-if="hotel_start != ''">
+              Driving time between {{ hotel_start }} and {{ experiences[index].name }} is
+              {{ updatedDrivingTimes[index] }} minutes.
+            </p>
             <p v-for="(time, index) in drivingTimes" :key="index">
-              Driving time between {{ experiences[index].name }} and {{ experiences[index + 1].name }} is
+              {{ experiences[index].name }} to {{ experiences[index + 1].name }} will take
               {{ drivingTimes[index] }} minutes
+            </p>
+            <p v-if="hotel_end != ''">
+              {{ experiences[experiences.length - 1].name }} and {{ hotel_end }} is
+              {{ updatedDrivingTimes[updatedDrivingTimes.length - 2] }} minutes.
             </p>
           </div>
         </div>
@@ -106,12 +113,17 @@ export default {
       list_items: [],
       experiences: [],
       durations: [],
+      updatedDurations: [],
       drivingTimes: [],
+      updatedDrivingTimes: [],
       index: 0,
-      hotel_coords: [],
-      hotel_coordinates: [],
+      hotel_start_coords: [],
+      hotel_end_coords: [],
+      hotel_start_coordinates: [],
+      hotel_end_coordinates: [],
       input_times: [],
-      string: localStorage.getItem("address"),
+      hotel_start: "",
+      hotel_end: "",
     };
   },
   created: function () {
@@ -127,7 +139,10 @@ export default {
       this.setUpMap();
     });
   },
-  computed: {},
+  mounted: function () {
+    this.setUpMap();
+    this.getDriveTime();
+  },
   methods: {
     removeDate: function () {
       localStorage.removeItem("date");
@@ -149,7 +164,6 @@ export default {
           .setHTML(this.experiences[i].name)
           .addTo(map);
       }
-      // console.log(map);
       this.getDriveTime();
     },
     getDriveTime: function () {
@@ -182,28 +196,93 @@ export default {
           });
       }
     },
+    updateUser: function () {
+      console.log("updating user trip info");
+      var params = {
+        hotel_start: this.hotel_start,
+        hotel_end: this.hotel_end,
+      };
+      // console.log(this.user);
+      axios.patch("/api/users/" + this.user_id, params).catch((error) => console.log(error.response));
+      this.getCoordinates();
+      console.log("whaaaat");
+      // this.$router.go();
+    },
     getCoordinates: function () {
-      var string = "11-3815 5th St Volcano Hi 96785";
-      var url = encodeURIComponent(string);
+      var start = this.hotel_start;
+      var startingUrl = encodeURIComponent(start);
+      var end = this.hotel_end;
+      var endingUrl = encodeURIComponent(end);
       // console.log(hotel_coordinates);
       axios
         .get(
           "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
-            `${url}` +
+            `${startingUrl}` +
             ".json" +
             "?access_token=" +
             `${mapboxgl.accessToken}` +
             "&limit=1"
         )
         .then((response) => {
-          this.hotel_coords.push(response.data);
+          this.hotel_start_coords.push(response.data);
+          this.hotel_start_coordinates = this.hotel_start_coords[0].features[0].center;
         });
-      // var parsedyourElement = JSON.parse(JSON.stringify(this.hotel_coordinates));
-      // console.log(parsedyourElement);
-      this.hotel_coordinates = this.hotel_coords[0].features[0].center;
-      return this.hotel_coordinates;
-      // console.log(url);
-      // console.log(this.hotel_coordinates);
+      axios
+        .get(
+          "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
+            `${endingUrl}` +
+            ".json" +
+            "?access_token=" +
+            `${mapboxgl.accessToken}` +
+            "&limit=1"
+        )
+        .then((response) => {
+          this.hotel_end_coords.push(response.data);
+          this.hotel_end_coordinates = this.hotel_end_coords[0].features[0].center;
+        });
+      this.getUpdatedDriveTime();
+    },
+    getUpdatedDriveTime: function () {
+      mapboxgl.accessToken = process.env.VUE_APP_MAPBOX_API_KEY;
+      var coordinates = [];
+      for (var x = 0; x < this.hotel_start_coordinates.length; x++) {
+        coordinates.push(String(this.hotel_start_coordinates[x]));
+      }
+      for (var i = 0; i < this.experiences.length; i++) {
+        coordinates.push(this.experiences[i].lat, this.experiences[i].lng);
+      }
+      for (var y = 0; y < this.hotel_end_coordinates.length; y++) {
+        coordinates.push(String(this.hotel_end_coordinates[y]));
+      }
+      for (var k = 0, j = 1; j < coordinates.length; k = k + 2, j = j + 2) {
+        coordinates.join(",");
+        coordinates[k] = coordinates[k] + ",";
+        coordinates[j] = coordinates[j] + ";";
+      }
+      var coordinateString = coordinates.join("").slice(0, -1);
+      if (coordinates.length >= 4) {
+        axios
+          .get(
+            "https://api.mapbox.com/directions-matrix/v1/mapbox/driving/" +
+              `${coordinateString}` +
+              "?access_token=" +
+              `${mapboxgl.accessToken}`
+          )
+          .then((response) => {
+            this.updatedDurations = response.data;
+            // console.log(this.updatedDurations);
+
+            var matrix = this.updatedDurations.durations;
+            for (var i = 0, j = 1; j < coordinates.length / 2; i++, j++) {
+              this.updatedDrivingTimes.push((matrix[i][j] / 60) | 0);
+            }
+            this.updatedDrivingTimes.push(this.hotel_end);
+            this.updatedDrivingTimes;
+          });
+      }
+    },
+    autoPopulateHotel: function () {
+      this.hotel_end = this.hotel_start;
     },
   },
 };

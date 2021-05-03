@@ -91,7 +91,6 @@
     </div>
     <div id="footer-margin">
       <button v-if="!noDates()" v-on:click="editDates()" class="bg-info">Edit Trip Dates</button>
-      {{ userListItems }}
     </div>
   </div>
 </template>
