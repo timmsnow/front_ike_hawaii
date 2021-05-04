@@ -155,7 +155,7 @@ strong {
 }
 
 small {
-  font-size: 80%;
+  font-size: 30%;
 }
 
 sub,
@@ -468,8 +468,8 @@ hr {
 
 small,
 .small {
-  font-size: 80%;
-  font-weight: 400;
+  font-size: 30%;
+  /* font-weight: 400; */
 }
 
 mark,
@@ -2217,6 +2217,7 @@ textarea.form-control {
 
 .form-group {
   margin-bottom: 1rem;
+  align-items: center;
 }
 
 .form-text {
@@ -2700,7 +2701,7 @@ fieldset:disabled a.btn {
 }
 
 .btn-info {
-  color: #fff;
+  color: #fff !important;
   background-color: #17a2b8;
   border-color: #17a2b8;
 }
@@ -3755,6 +3756,7 @@ input[type="button"].btn-block {
 .custom-control-inline {
   display: inline-flex;
   margin-right: 1rem;
+  justify-content: center;
 }
 
 .custom-control-input {

@@ -49,18 +49,43 @@
       </div>
       <div class="time-tracker-container">
         <h2>Time Tracker</h2>
-        <div id="map"></div>
-        <div class="time-tracker">
-          <div id="time">
-            <form v-on:submit.prevent="updateUser()">
-              <label>Where are you waking up?</label>
-              <input type="text" placeholder="Hotel Address?" v-model="hotel_start" />
-              <label>Where are you sleeping?</label>
-              <button v-on:click.prevent="autoPopulateHotel()">Same place?</button>
-              <input type="text" placeholder="Hotel Address?" v-model="hotel_end" />
+        <div class="row">
+          <div class="col-lg-3 col-sm-6 mb-4" id="time">
+            <div class="sm" id="map"></div>
+          </div>
+          <div class="col-lg-4 col-sm-6 mb-4">
+            <h3>Your Info</h3>
+            <form class="form-group no-margin" v-on:submit.prevent="updateUser()">
+              <div class="form-row">
+                <label class="col-form-label">From where will you start?</label>
+                <input type="text" placeholder="Hotel Name or Address" v-model="hotel_start" />
+              </div>
+              <label class="col-form-label">Where are you sleeping?</label>
+              <span class="form-row">
+                <input type="text" placeholder="Hotel Name or Address" v-model="hotel_end" />
+                <button class="btn-info small col-form-label" v-on:click.prevent="autoPopulateHotel()">
+                  (Same as Above)
+                </button>
+              </span>
               <input type="submit" class="btn-primary" />
             </form>
-            <!-- <h3>How long would you like to stay?</h3>
+          </div>
+          <div class="col-lg-3 col-sm-6 mb-4" id="time">
+            <h3>Approximate Driving Times</h3>
+            <p v-if="hotel_start !== ''">
+              Driving time between {{ hotel_start }} and {{ experiences[index].name }} is
+              <span style="font-weight: bold">{{ updatedDrivingTimes[index] }} minutes.</span>
+            </p>
+            <p v-for="(time, index) in drivingTimes" :key="index">
+              {{ experiences[index].name }} to {{ experiences[index + 1].name }} will take
+              <span style="font-weight: bold">{{ drivingTimes[index] }} minutes</span>
+            </p>
+            <p v-if="hotel_end != ''">
+              {{ experiences[experiences.length - 1].name }} and {{ hotel_end }} is
+              <span style="font-weight: bold">{{ updatedDrivingTimes[updatedDrivingTimes.length - 1] }} minutes.</span>
+            </p>
+          </div>
+          <!-- <h3>How long would you like to stay?</h3>
             <form v-on:submit.prevent="storeTimes(times)">
             <div v-for="experience in experiences" :key="experience.id">
               <label class="time-label">
@@ -72,27 +97,16 @@
             </div>
             <input type="submit" class="btn-primary" />
             </form> -->
-          </div>
-          <div id="time">
-            <h3>Approximate Driving Times</h3>
-            <p v-if="hotel_start != ''">
-              Driving time between {{ hotel_start }} and {{ experiences[index].name }} is
-              {{ updatedDrivingTimes[index] }} minutes.
-            </p>
-            <p v-for="(time, index) in drivingTimes" :key="index">
-              {{ experiences[index].name }} to {{ experiences[index + 1].name }} will take
-              {{ drivingTimes[index] }} minutes
-            </p>
-            <p v-if="hotel_end != ''">
-              {{ experiences[experiences.length - 1].name }} and {{ hotel_end }} is
-              {{ updatedDrivingTimes[updatedDrivingTimes.length - 2] }} minutes.
-            </p>
-          </div>
         </div>
-        <h3>Total Time:</h3>
+        <div class="no-margin" v-if="totalDrivingTime !== ''">
+          <h3 class="no-marg">Total Driving Time: {{ totalDrivingTime }} minutes</h3>
+          <p class="text-center" style="font-style: italic">({{ drivingHours }} hours)</p>
+        </div>
       </div>
       <router-link to="/calendar">
-        <button ref="button" class="bg-info" v-on:click="removeDate(date)">Return to Calendar</button>
+        <div class="text-center">
+          <button ref="button" class="bg-info" v-on:click="removeDate(date)">Return to Calendar</button>
+        </div>
       </router-link>
     </div>
   </div>
@@ -124,6 +138,8 @@ export default {
       input_times: [],
       hotel_start: "",
       hotel_end: "",
+      totalDrivingTime: "",
+      drivingHours: "",
     };
   },
   created: function () {
@@ -226,60 +242,65 @@ export default {
         .then((response) => {
           this.hotel_start_coords.push(response.data);
           this.hotel_start_coordinates = this.hotel_start_coords[0].features[0].center;
+          axios
+            .get(
+              "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
+                `${endingUrl}` +
+                ".json" +
+                "?access_token=" +
+                `${mapboxgl.accessToken}` +
+                "&limit=1"
+            )
+            .then((response) => {
+              this.hotel_end_coords.push(response.data);
+              this.hotel_end_coordinates = this.hotel_end_coords[0].features[0].center;
+              console.log(this.hotel_end_coordinates);
+              var newCoordinates = [];
+              for (var x = 0; x < this.hotel_start_coordinates.length; x++) {
+                newCoordinates.push(String(this.hotel_start_coordinates[x]));
+              }
+              for (var i = 0; i < this.experiences.length; i++) {
+                newCoordinates.push(this.experiences[i].lat, this.experiences[i].lng);
+              }
+              for (var y = 0; y < this.hotel_end_coordinates.length; y++) {
+                newCoordinates.push(String(this.hotel_end_coordinates[y]));
+              }
+              for (var k = 0, j = 1; j < newCoordinates.length; k = k + 2, j = j + 2) {
+                newCoordinates.join(",");
+                newCoordinates[k] = newCoordinates[k] + ",";
+                newCoordinates[j] = newCoordinates[j] + ";";
+              }
+              var newCoordinateString = newCoordinates.join("").slice(0, -1);
+              if (newCoordinates.length >= 4) {
+                axios
+                  .get(
+                    "https://api.mapbox.com/directions-matrix/v1/mapbox/driving/" +
+                      `${newCoordinateString}` +
+                      "?access_token=" +
+                      `${mapboxgl.accessToken}`
+                  )
+                  .then((response) => {
+                    this.updatedDurations = response.data;
+                    var matrix = this.updatedDurations.durations;
+                    for (var i = 0, j = 1; j < newCoordinates.length / 2; i++, j++) {
+                      this.updatedDrivingTimes.push((matrix[i][j] / 60) | 0);
+                    }
+                    this.updatedDrivingTimes;
+                    console.log(this.updatedDrivingTimes);
+                    for (var z = 0, time = 0; z < this.updatedDrivingTimes.length; z++) {
+                      time += this.updatedDrivingTimes[z];
+                    }
+                    this.totalDrivingTime = time;
+                    const roundToHundredth = (value) => {
+                      return Number(value.toFixed(2));
+                    };
+                    this.drivingHours = roundToHundredth(time / 60);
+                  });
+              }
+            });
         });
-      axios
-        .get(
-          "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
-            `${endingUrl}` +
-            ".json" +
-            "?access_token=" +
-            `${mapboxgl.accessToken}` +
-            "&limit=1"
-        )
-        .then((response) => {
-          this.hotel_end_coords.push(response.data);
-          this.hotel_end_coordinates = this.hotel_end_coords[0].features[0].center;
-        });
-      this.getUpdatedDriveTime();
-    },
-    getUpdatedDriveTime: function () {
-      mapboxgl.accessToken = process.env.VUE_APP_MAPBOX_API_KEY;
-      var coordinates = [];
-      for (var x = 0; x < this.hotel_start_coordinates.length; x++) {
-        coordinates.push(String(this.hotel_start_coordinates[x]));
-      }
-      for (var i = 0; i < this.experiences.length; i++) {
-        coordinates.push(this.experiences[i].lat, this.experiences[i].lng);
-      }
-      for (var y = 0; y < this.hotel_end_coordinates.length; y++) {
-        coordinates.push(String(this.hotel_end_coordinates[y]));
-      }
-      for (var k = 0, j = 1; j < coordinates.length; k = k + 2, j = j + 2) {
-        coordinates.join(",");
-        coordinates[k] = coordinates[k] + ",";
-        coordinates[j] = coordinates[j] + ";";
-      }
-      var coordinateString = coordinates.join("").slice(0, -1);
-      if (coordinates.length >= 4) {
-        axios
-          .get(
-            "https://api.mapbox.com/directions-matrix/v1/mapbox/driving/" +
-              `${coordinateString}` +
-              "?access_token=" +
-              `${mapboxgl.accessToken}`
-          )
-          .then((response) => {
-            this.updatedDurations = response.data;
-            // console.log(this.updatedDurations);
 
-            var matrix = this.updatedDurations.durations;
-            for (var i = 0, j = 1; j < coordinates.length / 2; i++, j++) {
-              this.updatedDrivingTimes.push((matrix[i][j] / 60) | 0);
-            }
-            this.updatedDrivingTimes.push(this.hotel_end);
-            this.updatedDrivingTimes;
-          });
-      }
+      // mapboxgl.accessToken = process.env.VUE_APP_MAPBOX_API_KEY;
     },
     autoPopulateHotel: function () {
       this.hotel_end = this.hotel_start;
@@ -315,6 +336,10 @@ input[type="submit"] {
   margin-right: auto;
 }
 
+.no-margin {
+  margin: 0 0 0 10% !important;
+  padding-right: 10% !important;
+}
 #oval {
   width: 40%;
   height: auto;
@@ -328,7 +353,9 @@ input[type="submit"] {
   float: right;
   margin: 2%;
 }
-
+.no-marg {
+  padding: 0% !important;
+}
 .day-show {
   background-image: url("../assets/pineapplewallpaper3.jpg");
   padding-bottom: 10%;
@@ -369,10 +396,6 @@ input[type="submit"] {
   gap: 5%;
 }
 
-#time {
-  padding: 2%;
-}
-
 #map {
   margin: 10% auto;
   justify-content: center;
@@ -381,5 +404,14 @@ input[type="submit"] {
 
 .time-label {
   margin-top: 10%;
+}
+
+.small {
+  font-size: 50%;
+  margin-left: 2%;
+}
+
+.sm {
+  margin: 5%;
 }
 </style>
