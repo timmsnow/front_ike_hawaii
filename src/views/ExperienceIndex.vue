@@ -113,7 +113,7 @@
             v-for="experience in filterBy(filteredByTag, location)"
             v-bind:key="experience.id"
           >
-            <img v-bind:src="experience.image_url" v-bind:alt="experience.name" class="card-img-top" />
+            <img id="padding" v-bind:src="experience.image_url" v-bind:alt="experience.name" class="card-img-top" />
             <div class="card-body">
               <h4>{{ experience.name }}</h4>
               <p class="card-text">
@@ -374,5 +374,28 @@ dialog {
 }
 div.inline {
   float: left;
+}
+
+@media (max-width: 768px) {
+  #tags {
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin: 0% 2%;
+    gap: 2%;
+  }
+}
+
+@media (max-width: 768px) {
+  #pic-container {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 25%;
+  }
+}
+
+@media (max-width: 768px) {
+  #map {
+    margin: 5%;
+  }
 }
 </style>

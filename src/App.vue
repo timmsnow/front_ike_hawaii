@@ -52,6 +52,9 @@
 </template>
 
 <style>
+header.masthead {
+  padding: -10%;
+}
 li {
   list-style: none;
 }
@@ -79,7 +82,7 @@ router-link {
 }
 
 .welcome {
-  width: 60%;
+  width: 70%;
   border: 4px solid #fed136;
   padding: 5rem 0 5rem 0;
   margin: 0 auto;

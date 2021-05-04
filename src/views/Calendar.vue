@@ -24,7 +24,7 @@
     <dialog class="edit-dates">
       <div class="container">
         <form v-on:submit.prevent="updateUser(user)">
-          <h1>When will you be coming to our island?</h1>
+          <h3>When will you be coming to our island?</h3>
           <ul>
             <li class="text-danger" v-for="error in errors" v-bind:key="error">
               {{ error }}
@@ -43,13 +43,12 @@
               <input type="submit" class="btn-primary" value="Submit" />
             </div>
             <div class="inline">
-              <button class="btn-primary">Close</button>
+              <button class="bg-info">Close</button>
             </div>
           </div>
         </form>
       </div>
     </dialog>
-    <!-- </div> -->
 
     <div class="calendar" v-if="!noDates()">
       <div class="text-center">
@@ -67,9 +66,11 @@
                   <div class="item-container" v-for="list_item in filterByUserAndDate" v-bind:key="list_item.id">
                     <div class="filter" v-if="list_item.date == date">
                       <div class="flex">
-                        <p>{{ list_item.experience_info.name }} | {{ list_item.experience_info.location }}</p>
-
-                        <button class="bg-info" v-on:click="destroyListItem(list_item)">Remove</button>
+                        <div class="container">
+                          <h6>{{ list_item.experience_info.name }}</h6>
+                          <p>({{ list_item.experience_info.location }})</p>
+                        </div>
+                        <button class="bg-warning" v-on:click="destroyListItem(list_item)">Remove</button>
                       </div>
                       <hr />
                     </div>
@@ -77,10 +78,10 @@
                 </div>
                 <div id="buttons">
                   <router-link to="/experiences">
-                    <button class="bg-primary" ref="button" v-on:click="storeDate(date)">Add Experience</button>
+                    <button class="bg-info" ref="button" v-on:click="storeDate(date)">Add Experience</button>
                   </router-link>
                   <router-link to="/day-show">
-                    <button class="bg-primary" ref="button" v-on:click="storeDate(date)">Show Full Day Details</button>
+                    <button class="bg-info" ref="button" v-on:click="storeDate(date)">Show Full Day Details</button>
                   </router-link>
                 </div>
               </li>
@@ -90,16 +91,17 @@
       </div>
     </div>
     <div id="footer-margin">
-      <button v-if="!noDates()" v-on:click="editDates()" class="bg-info">Edit Trip Dates</button>
+      <button v-if="!noDates()" v-on:click="editDates()" class="bg-primary">Edit Trip Dates</button>
     </div>
   </div>
 </template>
 
 <style scoped>
 dialog {
-  border: 3px solid rgb(21, 102, 252);
+  border: 3px solid rgb(247, 200, 46);
   border-radius: 1%;
   padding: 8%;
+  box-shadow: 3px 1px 4px gray;
 }
 
 .calendar-page {
@@ -114,6 +116,17 @@ dialog {
 
 :root {
   --gutter: 20px;
+}
+.edit-dates {
+  background-image: url("../assets/hawaiian-dark-sunset.jpg");
+  background-size: cover;
+  color: white;
+  /* box-shadow: 3px 1px 4px gray; */
+}
+
+.edit-dates h3,
+label {
+  text-shadow: 1px 2px 2px black, 1px 1px 4px gray;
 }
 
 .slider {
