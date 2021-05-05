@@ -1,7 +1,7 @@
 <template>
   <div class="calendar-page">
     <!-- <header class="masthead"> -->
-    <div class="dates" v-if="noDates()">
+    <div class="dates" id="ferns" v-if="noDates()">
       <div class="page-section">
         <form class="container" v-on:submit.prevent="updateUser(user)">
           <h1 class="text-center">When will you be coming to our island?</h1>
@@ -16,7 +16,7 @@
             <label for="example-datepicker">Departure</label>
             <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
           </div>
-          <input type="submit" class="solo-button" value="Submit" />
+          <input type="submit" class="btn-primary" value="Submit" />
         </form>
       </div>
     </div>
@@ -102,6 +102,16 @@ dialog {
   border-radius: 1%;
   padding: 8%;
   box-shadow: 3px 1px 4px gray;
+}
+
+#ferns {
+  background: url("../assets/ferns.jpg");
+}
+
+.form-control {
+  text-shadow: none;
+  letter-spacing: 1px;
+  font-style: italic;
 }
 
 .calendar-page {

@@ -9,6 +9,7 @@ import VueDraggable from "vue-draggable";
 // import "bootstrap";
 // import "bootstrap/dist/css/bootstrap.min.css";
 
+
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 axios.defaults.baseURL = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "/";
 

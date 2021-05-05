@@ -18,7 +18,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav text-uppercase ml-auto">
-            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/">Home</a></li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="/"><span class="color">Home</span></a>
+            </li>
             <li class="nav-item" v-if="!ifLoggedIn()"><a class="nav-link js-scroll-trigger" href="/login">Login</a></li>
             <li class="nav-item" v-if="ifLoggedIn()">
               <a class="nav-link js-scroll-trigger" href="/logout">Logout</a>
@@ -124,8 +126,9 @@ router-link {
 .dates,
 h1 {
   color: white;
-  text-shadow: 0px 1px 1px black, 1px 1px 5px gray;
+  text-shadow: 0px 1px 1px black, 2px 1px 5px gray;
 }
+
 .dates,
 p {
   color: black;

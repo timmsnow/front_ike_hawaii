@@ -1,6 +1,6 @@
 <template>
   <div class="day-show">
-    <div class="container" id="pdf">
+    <div class="container" id="pdf" ref="content">
       <div class="top-padding">
         <div id="oval">
           <h1>{{ date }}</h1>
@@ -50,10 +50,10 @@
       <div class="time-tracker-container">
         <h2>Time Tracker</h2>
         <div class="row">
-          <div class="col-lg-3 col-sm-6 mb-4" id="time">
+          <div class="col-lg-5 col-sm-6 mb-4" id="time">
             <div class="sm" id="map"></div>
           </div>
-          <div class="col-lg-4 col-sm-6 mb-4">
+          <div class="col-lg-5 col-sm-6 mb-4">
             <h3>Your Info</h3>
             <form class="form-group no-margin" v-on:submit.prevent="updateUser()">
               <div class="form-row">
@@ -70,33 +70,32 @@
               <input type="submit" class="btn-primary" />
             </form>
           </div>
-          <div class="col-lg-3 col-sm-6 mb-4" id="time" ref="document">
-            <h3>Approximate Driving Times</h3>
-            <p v-if="hotel_start !== ''">
-              Driving time between {{ hotel_start }} and {{ experiences[index].name }} is
-              <span style="font-weight: bold">{{ updatedDrivingTimes[index] }} minutes.</span>
-            </p>
-            <p v-for="(time, index) in drivingTimes" :key="index">
-              {{ experiences[index].name }} to {{ experiences[index + 1].name }} will take
-              <span style="font-weight: bold">{{ drivingTimes[index] }} minutes</span>
-            </p>
-            <p v-if="hotel_end != ''">
-              {{ experiences[experiences.length - 1].name }} and {{ hotel_end }} is
-              <span style="font-weight: bold">{{ updatedDrivingTimes[updatedDrivingTimes.length - 1] }} minutes.</span>
-            </p>
-          </div>
+        </div>
+        <div class="text-center row" id="time" ref="document">
+          <h3>Approximate Driving Times</h3>
+          <p v-if="hotel_start !== ''">
+            Driving time between {{ hotel_start }} and {{ experiences[index].name }} is
+            <span style="font-weight: bold">{{ updatedDrivingTimes[index] }} minutes.</span>
+          </p>
+          <p v-for="(time, index) in drivingTimes" :key="index">
+            {{ experiences[index].name }} to {{ experiences[index + 1].name }} will take
+            <span style="font-weight: bold">{{ drivingTimes[index] }} minutes</span>
+          </p>
+          <p v-if="hotel_end != ''">
+            {{ experiences[experiences.length - 1].name }} and {{ hotel_end }} is
+            <span style="font-weight: bold">{{ updatedDrivingTimes[updatedDrivingTimes.length - 1] }} minutes.</span>
+          </p>
         </div>
         <div class="no-margin" v-if="totalDrivingTime !== ''">
           <h3 class="no-marg">Total Driving Time: {{ totalDrivingTime }} minutes</h3>
           <p class="text-center" style="font-style: italic">({{ drivingHours }} hours)</p>
         </div>
       </div>
-      <router-link to="/calendar">
-        <div class="text-center">
+      <div class="text-center">
+        <router-link to="/calendar">
           <button ref="button" class="bg-info" v-on:click="removeDate(date)">Return to Calendar</button>
-          <button @click="exportToPDF">Export to PDF</button>
-        </div>
-      </router-link>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -105,10 +104,8 @@
 /* global mapboxgl */
 
 import axios from "axios";
-import html2pdf from "html2pdf.js";
 
 export default {
-  name: "day-show",
   data: function () {
     return {
       user: {},
@@ -151,29 +148,6 @@ export default {
     this.getDriveTime();
   },
   methods: {
-    exportToPDF() {
-      let body = document.body;
-      let html = document.documentElement;
-      let height = Math.max(
-        body.scrollHeight,
-        body.offsetHeight,
-        html.clientHeight,
-        html.scrollHeight,
-        html.offsetHeight
-      );
-      let element = document.querySelector("#pdf");
-      let heightCM = height / 35.35;
-      html2pdf(element, {
-        margin: -10,
-        filename: "export.pdf",
-        html2canvas: { dpi: 291, letterRendering: true },
-        jsPDF: {
-          orientation: "portrait",
-          unit: "cm",
-          format: [heightCM, 50],
-        },
-      });
-    },
     removeDate: function () {
       localStorage.removeItem("date");
     },
@@ -399,8 +373,8 @@ input[type="submit"] {
 
 .time-tracker-container {
   background: white;
-  margin-left: 5%;
-  margin-right: 5%;
+  margin-left: 3%;
+  margin-right: 3%;
   box-shadow: 1px 1px 4px gray;
   margin-bottom: 2%;
 }
