@@ -1,6 +1,6 @@
 <template>
   <div class="day-show">
-    <div class="container">
+    <div class="container" id="pdf">
       <div class="top-padding">
         <div id="oval">
           <h1>{{ date }}</h1>
@@ -70,7 +70,7 @@
               <input type="submit" class="btn-primary" />
             </form>
           </div>
-          <div class="col-lg-3 col-sm-6 mb-4" id="time">
+          <div class="col-lg-3 col-sm-6 mb-4" id="time" ref="document">
             <h3>Approximate Driving Times</h3>
             <p v-if="hotel_start !== ''">
               Driving time between {{ hotel_start }} and {{ experiences[index].name }} is
@@ -85,18 +85,6 @@
               <span style="font-weight: bold">{{ updatedDrivingTimes[updatedDrivingTimes.length - 1] }} minutes.</span>
             </p>
           </div>
-          <!-- <h3>How long would you like to stay?</h3>
-            <form v-on:submit.prevent="storeTimes(times)">
-            <div v-for="experience in experiences" :key="experience.id">
-              <label class="time-label">
-                {{ experience.name }}
-                <br />
-                <span style="font-style: italic">(recommended: {{ experience.length }})</span>
-              </label>
-              <input type="text" placeholder="hours/minutes" />
-            </div>
-            <input type="submit" class="btn-primary" />
-            </form> -->
         </div>
         <div class="no-margin" v-if="totalDrivingTime !== ''">
           <h3 class="no-marg">Total Driving Time: {{ totalDrivingTime }} minutes</h3>
@@ -106,6 +94,7 @@
       <router-link to="/calendar">
         <div class="text-center">
           <button ref="button" class="bg-info" v-on:click="removeDate(date)">Return to Calendar</button>
+          <button @click="exportToPDF">Export to PDF</button>
         </div>
       </router-link>
     </div>
@@ -116,8 +105,10 @@
 /* global mapboxgl */
 
 import axios from "axios";
+import html2pdf from "html2pdf.js";
 
 export default {
+  name: "day-show",
   data: function () {
     return {
       user: {},
@@ -160,6 +151,29 @@ export default {
     this.getDriveTime();
   },
   methods: {
+    exportToPDF() {
+      let body = document.body;
+      let html = document.documentElement;
+      let height = Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        html.clientHeight,
+        html.scrollHeight,
+        html.offsetHeight
+      );
+      let element = document.querySelector("#pdf");
+      let heightCM = height / 35.35;
+      html2pdf(element, {
+        margin: -10,
+        filename: "export.pdf",
+        html2canvas: { dpi: 291, letterRendering: true },
+        jsPDF: {
+          orientation: "portrait",
+          unit: "cm",
+          format: [heightCM, 50],
+        },
+      });
+    },
     removeDate: function () {
       localStorage.removeItem("date");
     },
@@ -413,5 +427,9 @@ input[type="submit"] {
 
 .sm {
   margin: 5%;
+}
+
+#time {
+  padding: 0 5%;
 }
 </style>

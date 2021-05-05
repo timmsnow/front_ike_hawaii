@@ -42,36 +42,37 @@
       </div>
     </div> -->
     <div class="slider">
-      <div class="full hide-scroll" v-drag-and-drop:options="options">
+      <div class="full hide-scroll">
         <ul class="hs">
           <li v-for="(date, index) in dates" v-bind:key="`vfor-${index}`">
-            <!-- <li class="item"> -->
             <h5 class="date" ref="date">
               {{ date }}
             </h5>
-            <draggable class="container" :dates="dates" group="day" @change="log" @onDrop="log">
-              <div class="box">
-                <div class="item-container" v-for="list_item in filterByUserAndDate" v-bind:key="list_item.id">
-                  <div class="filter" v-if="list_item.date == date">
-                    <div class="flex">
-                      <p>{{ list_item.experience_info.name }} | {{ list_item.experience_info.location }}</p>
-                      {{ list_item.date }}
+            <div v-drag-and-drop:options="options">
+              <draggable class="container" :dates="dates" group="day" @change="log" @onDrop="log">
+                <div class="box">
+                  <div class="item-container" v-for="list_item in filterByUserAndDate" v-bind:key="list_item.id">
+                    <div class="filter" v-if="list_item.date == date">
+                      <div class="flex">
+                        <p>{{ list_item.experience_info.name }} | {{ list_item.experience_info.location }}</p>
+                        {{ list_item.date }}
 
-                      <button class="bg-info" v-on:click="destroyListItem(list_item)">Remove</button>
+                        <button class="bg-info" v-on:click="destroyListItem(list_item)">Remove</button>
+                      </div>
+                      <hr />
                     </div>
-                    <hr />
                   </div>
                 </div>
-              </div>
-              <div id="buttons">
-                <router-link to="/experiences">
-                  <button class="bg-primary" ref="button" v-on:click="storeDate(date)">Add Experience</button>
-                </router-link>
-                <router-link to="/day-show">
-                  <button class="bg-primary" ref="button" v-on:click="storeDate(date)">Show Full Day Details</button>
-                </router-link>
-              </div>
-            </draggable>
+                <div id="buttons">
+                  <router-link to="/experiences">
+                    <button class="bg-primary" ref="button" v-on:click="storeDate(date)">Add Experience</button>
+                  </router-link>
+                  <router-link to="/day-show">
+                    <button class="bg-primary" ref="button" v-on:click="storeDate(date)">Show Full Day Details</button>
+                  </router-link>
+                </div>
+              </draggable>
+            </div>
           </li>
         </ul>
       </div>
@@ -100,6 +101,7 @@ export default {
       inputTripStart: "",
       inputTripEnd: "",
       dates: [],
+      date: "",
       list_item: {},
       selectedListItem: {},
       userListItems: [],
@@ -112,6 +114,16 @@ export default {
         showDropzoneAreas: true,
         onDrop: function () {
           console.log("what");
+          var current_user = localStorage.getItem("user_id");
+          var filteredItems = this.list_items.filter((list_item) => list_item.user_id == current_user);
+          var params = {
+            date: this.dates[1],
+          };
+          filteredItems.forEach((item) =>
+            axios.patch("/api/list_items/" + item.id, params).catch((error) => console.log(error.response))
+          );
+          console.log(filteredItems);
+          // this.$router.go();
         },
         // onDragstart: function(event) {},
         // onDragenter: function(event) {},

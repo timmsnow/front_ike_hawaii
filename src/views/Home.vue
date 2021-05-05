@@ -5,7 +5,7 @@
         <div class="masthead-subheading">Welcome to</div>
         <div class="masthead-heading text-uppercase">'Ike Hawaii</div>
         <div class="inline">
-          <button class="bg-primary" v-if="x === ''" v-on:click="showForm()">GET STARTED</button>
+          <button class="bg-primary" id="signup" v-if="x === ''" v-on:click="showForm()">GET STARTED</button>
           <br />
           <br />
           <p v-if="x === ''" class="text-white">OR</p>
@@ -50,7 +50,13 @@
   </div>
 </template>
 
-<style></style>
+<style>
+@media (max-width: 768px) {
+  #signup {
+    margin-top: 8%;
+  }
+}
+</style>
 
 <script>
 import axios from "axios";
