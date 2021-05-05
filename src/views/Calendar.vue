@@ -43,7 +43,7 @@
               <input type="submit" class="btn-primary" value="Submit" />
             </div>
             <div class="inline">
-              <button class="bg-info">Close</button>
+              <button class="bg-info" value="none">Close</button>
             </div>
           </div>
         </form>

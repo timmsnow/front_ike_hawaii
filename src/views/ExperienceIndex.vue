@@ -124,26 +124,26 @@
             <dialog id="experience-show">
               <form method="dialog">
                 <h1>Name: {{ currentExperience.name }}</h1>
+                <h3 class="section-subheading text-center" id="section">{{ currentExperience.location }}</h3>
+
                 <div id="pic-container">
                   <img class="image-container" v-bind:src="currentExperience.image_url" v-bind:alt="experience.name" />
                   <div id="map"></div>
                 </div>
-                <p>
-                  Location on the Island:
-                  {{ currentExperience.location }}
-                </p>
-                <p>
-                  Description:
-                  {{ currentExperience.description }}
-                </p>
-                <p>
-                  Recommended Length of Stay:
-                  {{ currentExperience.length }}
-                </p>
-                <p>
-                  Important Information:
-                  {{ currentExperience.info }}
-                </p>
+                <div class="box-1">
+                  <p>
+                    <span style="font-weight: bold">Description:</span>
+                    {{ currentExperience.description }}
+                  </p>
+                  <p>
+                    <span style="font-weight: bold">Recommended Length of Stay:</span>
+                    {{ currentExperience.length }}
+                  </p>
+                  <p>
+                    <span style="font-weight: bold">Important Information:</span>
+                    {{ currentExperience.info }}
+                  </p>
+                </div>
                 <br />
                 <div id="buttons">
                   <button class="bg-primary" v-on:click="createListItem()">Add to the list</button>
@@ -369,6 +369,9 @@ dialog {
   box-shadow: 1px 1px 4px gray;
 }
 
+.box-1 {
+  padding: 8% 8% 0 8%;
+}
 #padding {
   padding-top: 2%;
 }
