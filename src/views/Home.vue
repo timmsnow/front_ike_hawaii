@@ -3,7 +3,10 @@
     <header class="masthead">
       <div class="welcome">
         <div class="masthead-subheading">Welcome to</div>
-        <div class="masthead-heading text-uppercase">'Ike Hawaii</div>
+        <div class="masthead-heading text-uppercase">
+          'ike Hawaii
+          <!-- <img src="../assets/ike-logo-7.png" class="smaller" /> -->
+        </div>
         <div class="inline">
           <button class="bg-primary" id="signup" v-if="x === ''" v-on:click="showForm()">GET STARTED</button>
           <br />
@@ -50,7 +53,14 @@
   </div>
 </template>
 
-<style>
+<style scoped>
+.masthead {
+  background: url("../assets/pineapplewallpaper3.jpg");
+}
+.welcome {
+  background: url("../assets/ferns.jpg");
+  background-size: cover;
+}
 @media (max-width: 768px) {
   #signup {
     margin-top: 8%;

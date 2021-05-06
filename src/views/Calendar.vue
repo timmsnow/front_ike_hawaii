@@ -1,7 +1,7 @@
 <template>
   <div class="calendar-page">
     <!-- <header class="masthead"> -->
-    <div class="dates" id="ferns" v-if="noDates()">
+    <div class="dates" id="kilauea" v-if="noDates()">
       <div class="page-section">
         <form class="container" v-on:submit.prevent="updateUser(user)">
           <h1 class="text-center">When will you be coming to our island?</h1>
@@ -104,8 +104,9 @@ dialog {
   box-shadow: 3px 1px 4px gray;
 }
 
-#ferns {
-  background: url("../assets/ferns.jpg");
+#kilauea {
+  background: url("../assets/hawaiian-dark-sunset.jpg");
+  background-size: cover;
 }
 
 .form-control {
@@ -116,6 +117,7 @@ dialog {
 
 .calendar-page {
   background-image: url("../assets/pineapplewallpaper3.jpg");
+  padding-top: 5%;
 }
 
 #surf {
