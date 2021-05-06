@@ -16,14 +16,17 @@
             <label for="example-datepicker">Departure</label>
             <b-form-datepicker id="example-datepicker-2" v-model="inputTripEnd" class="mb-2"></b-form-datepicker>
           </div>
-          <input type="submit" class="btn-primary" value="Submit" />
+          <div class="text-center margin">
+            <input type="submit" class="btn-primary" value="Submit" />
+          </div>
         </form>
       </div>
     </div>
 
     <dialog class="edit-dates">
       <div class="container">
-        <form v-on:submit.prevent="updateUser(user)">
+        <!-- <form v-on:submit.prevent="updateUser(user)"> -->
+        <form method="dialog">
           <h3>When will you be coming to our island?</h3>
           <ul>
             <li class="text-danger" v-for="error in errors" v-bind:key="error">
@@ -40,10 +43,12 @@
           </div>
           <div class="buttons">
             <div class="inline">
-              <input type="submit" class="btn-primary" value="Submit" />
+              <button type="submit" class="bg-warning" v-on:click="updateUser(user)">Submit</button>
             </div>
             <div class="inline">
-              <button class="bg-info" value="none">Close</button>
+              <button class="bg-info">
+                <span class="text">Close</span>
+              </button>
             </div>
           </div>
         </form>
@@ -104,6 +109,9 @@ dialog {
   box-shadow: 3px 1px 4px gray;
 }
 
+.margin {
+  margin-top: 8%;
+}
 #kilauea {
   background: url("../assets/hawaiian-dark-sunset.jpg");
   background-size: cover;

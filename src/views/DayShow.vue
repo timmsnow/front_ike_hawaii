@@ -91,10 +91,11 @@
           <p class="text-center" style="font-style: italic">({{ drivingHours }} hours)</p>
         </div>
       </div>
-      <div class="text-center">
+      <div class="text-center buttons">
         <router-link to="/calendar">
           <button ref="button" class="bg-info" v-on:click="removeDate(date)">Return to Calendar</button>
         </router-link>
+        <button ref="button" class="bg-info" v-on:click="createPDF()">Save Day Info</button>
       </div>
     </div>
   </div>
@@ -104,7 +105,7 @@
 /* global mapboxgl */
 
 import axios from "axios";
-
+import * as jsPDF from "jspdf";
 export default {
   data: function () {
     return {
@@ -148,6 +149,14 @@ export default {
     this.getDriveTime();
   },
   methods: {
+    createPDF: function () {
+      const doc = new jsPDF();
+      const contentHtml = this.$refs.content.innerHTML;
+      doc.fromHTML(contentHtml, 15, 15, {
+        width: 170,
+      });
+      doc.save("sample.pdf", { returnPromise: true });
+    },
     removeDate: function () {
       localStorage.removeItem("date");
     },

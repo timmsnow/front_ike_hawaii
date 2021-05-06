@@ -9,8 +9,6 @@
         </div>
         <div class="inline">
           <button class="bg-primary" id="signup" v-if="x === ''" v-on:click="showForm()">GET STARTED</button>
-          <br />
-          <br />
           <p v-if="x === ''" class="text-white">OR</p>
           <a href="/login"><button class="bg-primary" v-if="x === ''" style="font-style: italic">LOG IN</button></a>
         </div>
@@ -60,11 +58,16 @@
 .welcome {
   background: url("../assets/ferns.jpg");
   background-size: cover;
+  box-shadow: 0px 0px 3px rgb(85, 85, 85);
 }
 @media (max-width: 768px) {
   #signup {
-    margin-top: 8%;
+    margin-top: 20%;
   }
+}
+
+.text-white {
+  margin-top: 2%;
 }
 </style>
 
